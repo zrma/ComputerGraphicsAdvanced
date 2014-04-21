@@ -27,8 +27,8 @@ struct CUSTOMVERTEX
 struct MYINDEX
 {
 	// 16비트 크기로 인덱스 생성
-	DWORD	_0, _1, _2;
-	
+	WORD	_0, _1, _2;
+
 	// 32비트 크기로 인덱스 생성
 	// UINT	_0, _1, _2;
 };
@@ -102,7 +102,6 @@ HRESULT InitVB()
 
 	// 8개의 버텍스를 보관할 버텍스 버퍼를 생성한다.
 	// FVF를 지정하여 보관할 데이터의 형식을 지정한다.
-	
 	if ( FAILED( g_pd3dDevice->CreateVertexBuffer( 8 * sizeof( CUSTOMVERTEX ), 0, D3DFVF_CUSTOMVERTEX,
 		D3DPOOL_DEFAULT, &g_pVB, NULL ) ) )
 	{
@@ -169,26 +168,25 @@ HRESULT InitIB()
 //////////////////////////////////////////////////////////////////////////
 VOID Cleanup()
 {
-	if ( g_pMeshMaterials != NULL )
-		delete[] g_pMeshMaterials;
-
-	if ( g_pMeshTextures )
+	if ( g_pIB != NULL )
 	{
-		for ( DWORD i = 0; i < g_dwNumMaterials; i++ )
-		{
-			if ( g_pMeshTextures[i] )
-				g_pMeshTextures[i]->Release();
-		}
-		delete[] g_pMeshTextures;
+		g_pIB->Release();
 	}
-	if ( g_pMesh != NULL )
-		g_pMesh->Release();
+
+	if ( g_pVB != NULL )
+	{
+		g_pVB->Release();
+	}
 
 	if ( g_pd3dDevice != NULL )
+	{
 		g_pd3dDevice->Release();
+	}
 
 	if ( g_pD3D != NULL )
+	{
 		g_pD3D->Release();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -202,13 +200,17 @@ VOID SetupMatrices()
 	D3DXMATRIXA16 worldMatrix;
 	D3DXMatrixIdentity( &worldMatrix );
 	// 단위 행렬로 설정
-	D3DXMatrixRotationY( &worldMatrix, timeGetTime() / 1000.0f );
+	D3DXMatrixRotationY( &worldMatrix, GetTickCount() / 500.0f );
+	// GetTickCount - 정밀도 14~16ms
+	// timeGetTime() - 1ms
+	// QueryPerformanceFrequency() - 1ms 미만 : 알고리즘 성능 측정에 많이 사용
+
 	// X축을 중심으로 Rotate 행렬 생성
 	g_pd3dDevice->SetTransform( D3DTS_WORLD, &worldMatrix );
 
 	// View
-	D3DXVECTOR3 eyePoint( 0.0f, 7.0f, -30.0f );
-	D3DXVECTOR3 lookAtPoint( 0.0f, 7.0f, 0.0f );
+	D3DXVECTOR3 eyePoint( 0.0f, 3.0f, -5.0f );
+	D3DXVECTOR3 lookAtPoint( 0.0f, 0.0f, 0.0f );
 	D3DXVECTOR3 upVector( 0.0f, 1.0f, 0.0f );
 	D3DXMATRIXA16 viewMatrix;
 	D3DXMatrixLookAtLH( &viewMatrix, &eyePoint, &lookAtPoint, &upVector );
@@ -234,30 +236,25 @@ VOID Render()
 	g_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
 						 D3DCOLOR_XRGB( 20, 0, 0 ), 1.0f, 0 );
 
+	SetupMatrices();
+
 	// 렌더링 시작
 	if ( SUCCEEDED( g_pd3dDevice->BeginScene() ) )
 	{
 		// 실제 렌더링 명령들이 나열될 곳
 		
-		//////////////////////////////////////////////////////////////////////////
-		// 이 내부는 짧고 간결할 수록 좋다
-		//////////////////////////////////////////////////////////////////////////
+		// 1. 버텍스 데이터가 담겨있는 버텍스 버퍼를 출력 스트림으로 할당
+		g_pd3dDevice->SetStreamSource( 0, g_pVB, 0, sizeof( CUSTOMVERTEX ) );
+
+		// 2. D3D에게 버텍스 셰이더 정보 지정. 대부분는 FVF만 지정
+		g_pd3dDevice->SetFVF( D3DFVF_CUSTOMVERTEX );
 		
-		// 행렬 설정
-		SetupMatrices();
+		// 3. 인덱스 버퍼를 지정
+		g_pd3dDevice->SetIndices( g_pIB );
 
-		// 메시는 재질이 다른 메시 별로 부분 집합을 이루고 있다.
-		// 이들을 루프를 수행해서 모두 그려준다.
-		for ( DWORD i = 0; i < g_dwNumMaterials; ++i )
-		{
-			// 부분집합 메시의 재질과 텍스쳐 설정
-			g_pd3dDevice->SetMaterial( &g_pMeshMaterials[i] );
-			g_pd3dDevice->SetTexture( 0, g_pMeshTextures[i] );
-
-			// 부분집합 메시 출력
-			g_pMesh->DrawSubset( i );
-			// DrawSubset() - 분할 된 부분 메시별로 따로 그리는 함수
-		}
+		// 4. DrawIndexedPrimitive()
+		g_pd3dDevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12 );
+		// 인덱스는 DrawIndexdPrimitive()로 그려야 한다.
 
 		// 렌더링 종료
 		g_pd3dDevice->EndScene();
@@ -306,26 +303,30 @@ INT APIENTRY _tWinMain( _In_ HINSTANCE hInstance,
 	if ( SUCCEEDED( InitD3D( hWnd ) ) )
 	{
 		// 버텍스 버퍼 초기화
-		if ( SUCCEEDED (InitGeometry()))
+		if ( SUCCEEDED (InitVB()))
 		{
-			// 윈도우 출력
-			ShowWindow( hWnd, SW_SHOWDEFAULT );
-			UpdateWindow( hWnd );
-
-			// 메시지 루프
-			MSG msg;
-			ZeroMemory( &msg, sizeof( msg ) );
-			while ( msg.message != WM_QUIT)
+			// 인덱스 버퍼 초기화
+			if ( SUCCEEDED(InitIB()) )
 			{
-				// 메시지 큐에 메시지가 있으면 메시지 처리
-				if ( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
+				// 윈도우 출력
+				ShowWindow( hWnd, SW_SHOWDEFAULT );
+				UpdateWindow( hWnd );
+
+				// 메시지 루프
+				MSG msg;
+				ZeroMemory( &msg, sizeof( msg ) );
+				while ( msg.message != WM_QUIT )
 				{
-					TranslateMessage( &msg );
-					DispatchMessage( &msg );
-				}
-				else
-				{
-					Render();
+					// 메시지 큐에 메시지가 있으면 메시지 처리
+					if ( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
+					{
+						TranslateMessage( &msg );
+						DispatchMessage( &msg );
+					}
+					else
+					{
+						Render();
+					}
 				}
 			}
 		}

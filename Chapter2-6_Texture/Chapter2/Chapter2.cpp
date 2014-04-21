@@ -149,16 +149,24 @@ HRESULT InitGeometry()
 VOID Cleanup()
 {
 	if ( g_pTexture != NULL )
+	{
 		g_pTexture->Release();
+	}
 
 	if ( g_pVB != NULL )
+	{
 		g_pVB->Release();
+	}
 
 	if ( g_pd3dDevice != NULL )
+	{
 		g_pd3dDevice->Release();
+	}
 
 	if ( g_pD3D != NULL )
+	{
 		g_pD3D->Release();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////

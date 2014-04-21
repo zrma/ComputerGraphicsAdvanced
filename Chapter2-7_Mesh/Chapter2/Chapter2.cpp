@@ -170,7 +170,9 @@ HRESULT InitGeometry()
 VOID Cleanup()
 {
 	if ( g_pMeshMaterials != NULL )
+	{
 		delete[] g_pMeshMaterials;
+	}
 
 	if ( g_pMeshTextures )
 	{
@@ -182,13 +184,19 @@ VOID Cleanup()
 		delete[] g_pMeshTextures;
 	}
 	if ( g_pMesh != NULL )
+	{
 		g_pMesh->Release();
+	}
 
 	if ( g_pd3dDevice != NULL )
+	{
 		g_pd3dDevice->Release();
+	}
 
 	if ( g_pD3D != NULL )
+	{
 		g_pD3D->Release();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
