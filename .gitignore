@@ -39,8 +39,8 @@ Version.cpp
 
 # generated files
 ipch/
-#Debug/
-#Release/
+Debug/
+Release/
 #bin/
 obj/
 
