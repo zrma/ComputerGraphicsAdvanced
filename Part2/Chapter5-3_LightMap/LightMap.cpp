@@ -1,11 +1,11 @@
-/**-----------------------------------------------------------------------------
- * \brief ¶óÀÌÆ®¸ÅÇÎ ±â¹ıÀÇ ÀÌÇØ
- * ÆÄÀÏ: LightMap.cpp
+ï»¿/**-----------------------------------------------------------------------------
+ * \brief ë¼ì´íŠ¸ë§¤í•‘ ê¸°ë²•ì˜ ì´í•´
+ * íŒŒì¼: LightMap.cpp
  *
- * ¼³¸í: ¶óÀÌÆ®¸ÊÇÎÀÌ¶õ Quake·ùÀÇ °ÔÀÓ¿¡¼­ º®¸éµî¿¡ ½ÇÁ¦ ±¤¿øÀ» »ç¿ëÇÏÁö ¾Ê°í
- *       ¸¶Ä¡ ±¤¿øÀÌ ÀÖ´Â°Í °°Àº È¿°ú¸¦ ³»´Â ±â¹ıÀ» ¸»ÇÑ´Ù.
- *       ½ÇÁ¦ °ÔÀÓ¿¡¼­´Â º®¸éÀ» BSPÆ®¸®·Î ºĞÇÒÇÏ¸é¼­ ±¤¿øµé°úÀÇ ¿¬»êÀ» ÅëÇØ¼­
- *       ¶óÀÌÆ®¸ÊÀ» »ı¼ºÇÏÁö¸¸ ¿©±â¼­´Â ¸¸µé¾îÁø ¶óÀÌÆ®¸ÊÀ» »ç¿ëÇÏ¿´´Ù.
+ * ì„¤ëª…: ë¼ì´íŠ¸ë§µí•‘ì´ë€ Quakeë¥˜ì˜ ê²Œì„ì—ì„œ ë²½ë©´ë“±ì— ì‹¤ì œ ê´‘ì›ì„ ì‚¬ìš©í•˜ì§€ ì•Šê³ 
+ *       ë§ˆì¹˜ ê´‘ì›ì´ ìˆëŠ”ê²ƒ ê°™ì€ íš¨ê³¼ë¥¼ ë‚´ëŠ” ê¸°ë²•ì„ ë§í•œë‹¤.
+ *       ì‹¤ì œ ê²Œì„ì—ì„œëŠ” ë²½ë©´ì„ BSPíŠ¸ë¦¬ë¡œ ë¶„í• í•˜ë©´ì„œ ê´‘ì›ë“¤ê³¼ì˜ ì—°ì‚°ì„ í†µí•´ì„œ
+ *       ë¼ì´íŠ¸ë§µì„ ìƒì„±í•˜ì§€ë§Œ ì—¬ê¸°ì„œëŠ” ë§Œë“¤ì–´ì§„ ë¼ì´íŠ¸ë§µì„ ì‚¬ìš©í•˜ì˜€ë‹¤.
  *       
  *------------------------------------------------------------------------------
  */
@@ -16,41 +16,43 @@
 
 
 /**-----------------------------------------------------------------------------
- *  Àü¿ªº¯¼ö
+ *  ì „ì—­ë³€ìˆ˜
  *------------------------------------------------------------------------------
  */
-LPDIRECT3D9             g_pD3D       = NULL; /// D3D µğ¹ÙÀÌ½º¸¦ »ı¼ºÇÒ D3D°´Ã¼º¯¼ö
-LPDIRECT3DDEVICE9       g_pd3dDevice = NULL; /// ·»´õ¸µ¿¡ »ç¿ëµÉ D3Dµğ¹ÙÀÌ½º
-LPDIRECT3DVERTEXBUFFER9 g_pVB        = NULL; /// Á¤Á¡À» º¸°üÇÒ Á¤Á¡¹öÆÛ
-LPDIRECT3DTEXTURE9		g_pTex0		 = NULL; /// Texture 0(º®¸é)
-LPDIRECT3DTEXTURE9		g_pTex1		 = NULL; /// Texture 1(¶óÀÌÆ®¸Ê)
+LPDIRECT3D9             g_pD3D       = NULL; /// D3D ë””ë°”ì´ìŠ¤ë¥¼ ìƒì„±í•  D3Dê°ì²´ë³€ìˆ˜
+LPDIRECT3DDEVICE9       g_pd3dDevice = NULL; /// ë Œë”ë§ì— ì‚¬ìš©ë  D3Dë””ë°”ì´ìŠ¤
+LPDIRECT3DVERTEXBUFFER9 g_pVB        = NULL; /// ì •ì ì„ ë³´ê´€í•  ì •ì ë²„í¼
+LPDIRECT3DTEXTURE9		g_pTex0		 = NULL; /// Texture 0(ë²½ë©´)
+LPDIRECT3DTEXTURE9		g_pTex1		 = NULL; /// Texture 1(ë¼ì´íŠ¸ë§µ)
 
 D3DXMATRIXA16			g_matAni;
 
-/// »ç¿ëÀÚ Á¤Á¡À» Á¤ÀÇÇÒ ±¸Á¶Ã¼
+/// ì‚¬ìš©ì ì •ì ì„ ì •ì˜í•  êµ¬ì¡°ì²´
 struct CUSTOMVERTEX
 {
-    FLOAT x, y, z;	/// Á¤Á¡ÀÇ º¯È¯µÈ ÁÂÇ¥
-    DWORD color;	/// Á¤Á¡ÀÇ »ö±ò
+    FLOAT x, y, z;	/// ì •ì ì˜ ë³€í™˜ëœ ì¢Œí‘œ
+    DWORD color;	/// ì •ì ì˜ ìƒ‰ê¹”
 	FLOAT u,v;
 };
 
-/// »ç¿ëÀÚ Á¤Á¡ ±¸Á¶Ã¼¿¡ °üÇÑ Á¤º¸¸¦ ³ªÅ¸³»´Â FVF°ª
+/// ì‚¬ìš©ì ì •ì  êµ¬ì¡°ì²´ì— ê´€í•œ ì •ë³´ë¥¼ ë‚˜íƒ€ë‚´ëŠ” FVFê°’
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1|D3DFVF_TEXCOORDSIZE2(0))
 
 
 /**-----------------------------------------------------------------------------
- * Direct3D ÃÊ±âÈ­
+ * Direct3D ì´ˆê¸°í™”
  *------------------------------------------------------------------------------
  */
 HRESULT InitD3D( HWND hWnd )
 {
-    /// µğ¹ÙÀÌ½º¸¦ »ı¼ºÇÏ±âÀ§ÇÑ D3D°´Ã¼ »ı¼º
-    if( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
-        return E_FAIL;
+    /// ë””ë°”ì´ìŠ¤ë¥¼ ìƒì„±í•˜ê¸°ìœ„í•œ D3Dê°ì²´ ìƒì„±
+	if ( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
+	{
+		return E_FAIL;
+	}
 
-    /// µğ¹ÙÀÌ½º¸¦ »ı¼ºÇÒ ±¸Á¶Ã¼
-    /// º¹ÀâÇÑ ¿ÀºêÁ§Æ®¸¦ ±×¸±°ÍÀÌ±â¶§¹®¿¡, ÀÌ¹ø¿¡´Â Z¹öÆÛ°¡ ÇÊ¿äÇÏ´Ù.
+    /// ë””ë°”ì´ìŠ¤ë¥¼ ìƒì„±í•  êµ¬ì¡°ì²´
+    /// ë³µì¡í•œ ì˜¤ë¸Œì íŠ¸ë¥¼ ê·¸ë¦´ê²ƒì´ê¸°ë•Œë¬¸ì—, ì´ë²ˆì—ëŠ” Zë²„í¼ê°€ í•„ìš”í•˜ë‹¤.
     D3DPRESENT_PARAMETERS d3dpp;
     ZeroMemory( &d3dpp, sizeof(d3dpp) );
     d3dpp.Windowed = TRUE;
@@ -59,21 +61,20 @@ HRESULT InitD3D( HWND hWnd )
     d3dpp.EnableAutoDepthStencil = TRUE;
     d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
 
-    /// µğ¹ÙÀÌ½º »ı¼º
-    if( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
-                                      D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-                                      &d3dpp, &g_pd3dDevice ) ) )
-    {
-        return E_FAIL;
-    }
+    /// ë””ë°”ì´ìŠ¤ ìƒì„±
+	if ( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
+		D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &g_pd3dDevice ) ) )
+	{
+		return E_FAIL;
+	}
 
-    /// ÄÃ¸µ±â´ÉÀ» ²ö´Ù.
+    /// ì»¬ë§ê¸°ëŠ¥ì„ ëˆë‹¤.
     g_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
 
-    /// Z¹öÆÛ±â´ÉÀ» ÄÒ´Ù.
+    /// Zë²„í¼ê¸°ëŠ¥ì„ ì¼ ë‹¤.
     g_pd3dDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
 
-    /// Á¤Á¡¿¡ »ö±ò°ªÀÌ ÀÖÀ¸¹Ç·Î, ±¤¿ø±â´ÉÀ» ²ö´Ù.
+    /// ì •ì ì— ìƒ‰ê¹”ê°’ì´ ìˆìœ¼ë¯€ë¡œ, ê´‘ì›ê¸°ëŠ¥ì„ ëˆë‹¤.
     g_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 
     return S_OK;
@@ -83,12 +84,12 @@ HRESULT InitD3D( HWND hWnd )
 
 
 /**-----------------------------------------------------------------------------
- * Á¤Á¡¹öÆÛ¸¦ »ı¼ºÇÏ°í Á¤Á¡°ªÀ» Ã¤¿ö³Ö´Â´Ù.
+ * ì •ì ë²„í¼ë¥¼ ìƒì„±í•˜ê³  ì •ì ê°’ì„ ì±„ì›Œë„£ëŠ”ë‹¤.
  *------------------------------------------------------------------------------
  */
 HRESULT InitVB()
 {
-    /// »óÀÚ(cube)¸¦ ·»´õ¸µÇÏ±âÀ§ÇØ 8°³ÀÇ Á¤Á¡À» ¼±¾ğ
+    /// ìƒì(cube)ë¥¼ ë Œë”ë§í•˜ê¸°ìœ„í•´ 8ê°œì˜ ì •ì ì„ ì„ ì–¸
     CUSTOMVERTEX vertices[] =
     {
 		{ -1,  1, 0 , 0xffffffff, 0, 0 },		/// v0
@@ -97,21 +98,22 @@ HRESULT InitVB()
 		{  1, -1, 0 , 0xffffffff, 1, 1 },		/// v3
     };
 
-    /// Á¤Á¡¹öÆÛ »ı¼º
-    /// 8°³ÀÇ »ç¿ëÀÚÁ¤Á¡À» º¸°üÇÒ ¸Ş¸ğ¸®¸¦ ÇÒ´çÇÑ´Ù.
-    /// FVF¸¦ ÁöÁ¤ÇÏ¿© º¸°üÇÒ µ¥ÀÌÅÍÀÇ Çü½ÄÀ» ÁöÁ¤ÇÑ´Ù.
-    if( FAILED( g_pd3dDevice->CreateVertexBuffer( 4*sizeof(CUSTOMVERTEX),
-                                                  0, D3DFVF_CUSTOMVERTEX,
-                                                  D3DPOOL_DEFAULT, &g_pVB, NULL ) ) )
-    {
-        return E_FAIL;
-    }
+    /// ì •ì ë²„í¼ ìƒì„±
+    /// 4ê°œì˜ ì‚¬ìš©ìì •ì ì„ ë³´ê´€í•  ë©”ëª¨ë¦¬ë¥¼ í• ë‹¹í•œë‹¤.
+    /// FVFë¥¼ ì§€ì •í•˜ì—¬ ë³´ê´€í•  ë°ì´í„°ì˜ í˜•ì‹ì„ ì§€ì •í•œë‹¤.
+	if ( FAILED( g_pd3dDevice->CreateVertexBuffer( 4 * sizeof( CUSTOMVERTEX ),
+		0, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &g_pVB, NULL ) ) )
+	{
+		return E_FAIL;
+	}
 
-    /// Á¤Á¡¹öÆÛ¸¦ °ªÀ¸·Î Ã¤¿î´Ù. 
-    /// Á¤Á¡¹öÆÛÀÇ Lock()ÇÔ¼ö¸¦ È£ÃâÇÏ¿© Æ÷ÀÎÅÍ¸¦ ¾ò¾î¿Â´Ù.
+    /// ì •ì ë²„í¼ë¥¼ ê°’ìœ¼ë¡œ ì±„ìš´ë‹¤. 
+    /// ì •ì ë²„í¼ì˜ Lock()í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì—¬ í¬ì¸í„°ë¥¼ ì–»ì–´ì˜¨ë‹¤.
     VOID* pVertices;
-    if( FAILED( g_pVB->Lock( 0, sizeof(vertices), (void**)&pVertices, 0 ) ) )
-        return E_FAIL;
+	if ( FAILED( g_pVB->Lock( 0, sizeof( vertices ), (void**)&pVertices, 0 ) ) )
+	{
+		return E_FAIL;
+	}
     memcpy( pVertices, vertices, sizeof(vertices) );
     g_pVB->Unlock();
 
@@ -120,40 +122,48 @@ HRESULT InitVB()
 
 HRESULT InitTexture()
 {
-    if( FAILED( D3DXCreateTextureFromFile( g_pd3dDevice, "env2.bmp", &g_pTex0 ) ) )
+	if ( FAILED( D3DXCreateTextureFromFile( g_pd3dDevice, "env2.bmp", &g_pTex0 ) ) )
+	{
 		return E_FAIL;
-
-    if( FAILED( D3DXCreateTextureFromFile( g_pd3dDevice, "spotlite.bmp", &g_pTex1 ) ) )
+	}
+	if ( FAILED( D3DXCreateTextureFromFile( g_pd3dDevice, "spotlite.bmp", &g_pTex1 ) ) )
+	{
 		return E_FAIL;
-
+	}
 	return S_OK;
 }
 
 /**-----------------------------------------------------------------------------
- * ±âÇÏÁ¤º¸ ÃÊ±âÈ­
+ * ê¸°í•˜ì •ë³´ ì´ˆê¸°í™”
  *------------------------------------------------------------------------------
  */
 HRESULT InitGeometry()
 {
-	if( FAILED( InitVB() ) ) return E_FAIL;
-	if( FAILED( InitTexture() ) ) return E_FAIL;
+	if ( FAILED( InitVB() ) )
+	{
+		return E_FAIL;
+	}
+	if ( FAILED( InitTexture() ) )
+	{
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
 
 
 /**-----------------------------------------------------------------------------
- * Ä«¸Ş¶ó Çà·Ä ¼³Á¤
+ * ì¹´ë©”ë¼ í–‰ë ¬ ì„¤ì •
  *------------------------------------------------------------------------------
  */
 void SetupCamera()
 {
-	/// ¿ùµå Çà·Ä ¼³Á¤
+	/// ì›”ë“œ í–‰ë ¬ ì„¤ì •
     D3DXMATRIXA16 matWorld;
 	D3DXMatrixIdentity( &matWorld );
     g_pd3dDevice->SetTransform( D3DTS_WORLD, &matWorld );
 
-    /// ºä Çà·ÄÀ» ¼³Á¤
+    /// ë·° í–‰ë ¬ì„ ì„¤ì •
     D3DXVECTOR3 vEyePt( 0.0f, 0.0f,-3.0f );
     D3DXVECTOR3 vLookatPt( 0.0f, 0.0f, 0.0f );
     D3DXVECTOR3 vUpVec( 0.0f, 1.0f, 0.0f );
@@ -161,43 +171,47 @@ void SetupCamera()
     D3DXMatrixLookAtLH( &matView, &vEyePt, &vLookatPt, &vUpVec );
     g_pd3dDevice->SetTransform( D3DTS_VIEW, &matView );
 
-    /// ÇÁ·ÎÁ§¼Ç Çà·Ä ¼³Á¤
+    /// í”„ë¡œì ì…˜ í–‰ë ¬ ì„¤ì •
     D3DXMATRIXA16 matProj;
     D3DXMatrixPerspectiveFovLH( &matProj, D3DX_PI/4, 1.0f, 1.0f, 100.0f );
     g_pd3dDevice->SetTransform( D3DTS_PROJECTION, &matProj );
 }
 
 /**-----------------------------------------------------------------------------
- * ¾Ö´Ï¸ŞÀÌ¼Ç Çà·Ä»ı¼º
+ * ì• ë‹ˆë©”ì´ì…˜ í–‰ë ¬ìƒì„±
  *------------------------------------------------------------------------------
  */
 VOID Animate()
 {
 	D3DXMatrixIdentity( &g_matAni );
-//	D3DXMatrixRotationZ( &g_matAni, GetTickCount()/500.0f ); 	/// ¸Ş½ÃÀÇ ZÃà È¸ÀüÇà·Ä
+//	D3DXMatrixRotationZ( &g_matAni, GetTickCount()/500.0f ); 	/// ë©”ì‹œì˜ Zì¶• íšŒì „í–‰ë ¬
 }
 
 
 
 /**-----------------------------------------------------------------------------
- * ÃÊ±âÈ­ °´Ã¼µé ¼Ò°Å
+ * ì´ˆê¸°í™” ê°ì²´ë“¤ ì†Œê±°
  *------------------------------------------------------------------------------
  */
 VOID Cleanup()
 {
-    if( g_pVB != NULL )        
-        g_pVB->Release();
-
-    if( g_pd3dDevice != NULL ) 
-        g_pd3dDevice->Release();
-
-    if( g_pD3D != NULL )       
-        g_pD3D->Release();
+	if ( g_pVB != NULL )
+	{
+		g_pVB->Release();
+	}
+	if ( g_pd3dDevice != NULL )
+	{
+		g_pd3dDevice->Release();
+	}
+	if ( g_pD3D != NULL )
+	{
+		g_pD3D->Release();
+	}
 }
 
 
 /**-----------------------------------------------------------------------------
- * ¸Ş½Ã ±×¸®±â
+ * ë©”ì‹œ ê·¸ë¦¬ê¸°
  *------------------------------------------------------------------------------
  */
 void DrawMesh( D3DXMATRIXA16* pMat )
@@ -209,34 +223,34 @@ void DrawMesh( D3DXMATRIXA16* pMat )
 }
 
 /**-----------------------------------------------------------------------------
- * È­¸é ±×¸®±â
+ * í™”ë©´ ê·¸ë¦¬ê¸°
  *------------------------------------------------------------------------------
  */
 VOID Render()
 {
 	D3DXMATRIXA16	matWorld;
 
-    /// ÈÄ¸é¹öÆÛ¿Í Z¹öÆÛ ÃÊ±âÈ­
+    /// í›„ë©´ë²„í¼ì™€ Zë²„í¼ ì´ˆê¸°í™”
     g_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,0,255), 1.0f, 0 );
 
-	/// ¾Ö´Ï¸ŞÀÌ¼Ç Çà·Ä¼³Á¤
+	/// ì• ë‹ˆë©”ì´ì…˜ í–‰ë ¬ì„¤ì •
 	Animate();
-    /// ·»´õ¸µ ½ÃÀÛ
+    /// ë Œë”ë§ ì‹œì‘
     if( SUCCEEDED( g_pd3dDevice->BeginScene() ) )
     {
-        g_pd3dDevice->SetTexture( 0, g_pTex0 );		/// 0¹ø ÅØ½ºÃÄ ½ºÅ×ÀÌÁö¿¡ ÅØ½ºÃÄ °íÁ¤(º®¸é)
-        g_pd3dDevice->SetTexture( 1, g_pTex1 );		/// 1¹ø ÅØ½ºÃÄ ½ºÅ×ÀÌÁö¿¡ ÅØ½ºÃÄ °íÁ¤(¶óÀÌÆ®¸Ê)
+        g_pd3dDevice->SetTexture( 0, g_pTex0 );		/// 0ë²ˆ í…ìŠ¤ì³ ìŠ¤í…Œì´ì§€ì— í…ìŠ¤ì³ ê³ ì •(ë²½ë©´)
+        g_pd3dDevice->SetTexture( 1, g_pTex1 );		/// 1ë²ˆ í…ìŠ¤ì³ ìŠ¤í…Œì´ì§€ì— í…ìŠ¤ì³ ê³ ì •(ë¼ì´íŠ¸ë§µ)
 
-		g_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0 );	/// 0¹ø ÅØ½ºÃ³ : 0¹ø ÅØ½ºÃ³ ÀÎµ¦½º »ç¿ë
-		g_pd3dDevice->SetTextureStageState( 1, D3DTSS_TEXCOORDINDEX, 0 );	/// 1¹ø ÅØ½ºÃ³ : 0¹ø ÅØ½ºÃ³ ÀÎµ¦½º »ç¿ë
-		g_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );	/// 0¹ø ÅØ½ºÃ³ ½ºÅ×ÀÌÁöÀÇ È®´ë ÇÊÅÍ
-		g_pd3dDevice->SetSamplerState( 1, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );	/// 1¹ø ÅØ½ºÃ³ ½ºÅ×ÀÌÁöÀÇ È®´ë ÇÊÅÍ
+		g_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0 );	/// 0ë²ˆ í…ìŠ¤ì²˜ : 0ë²ˆ í…ìŠ¤ì²˜ ì¸ë±ìŠ¤ ì‚¬ìš©
+		g_pd3dDevice->SetTextureStageState( 1, D3DTSS_TEXCOORDINDEX, 0 );	/// 1ë²ˆ í…ìŠ¤ì²˜ : 0ë²ˆ í…ìŠ¤ì²˜ ì¸ë±ìŠ¤ ì‚¬ìš©
+		g_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );	/// 0ë²ˆ í…ìŠ¤ì²˜ ìŠ¤í…Œì´ì§€ì˜ í™•ëŒ€ í•„í„°
+		g_pd3dDevice->SetSamplerState( 1, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );	/// 1ë²ˆ í…ìŠ¤ì²˜ ìŠ¤í…Œì´ì§€ì˜ í™•ëŒ€ í•„í„°
 		g_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_SELECTARG1 );
 		g_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
 		g_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1 );
 		g_pd3dDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
 
-		g_pd3dDevice->SetTextureStageState( 1, D3DTSS_COLOROP,   D3DTOP_MODULATE );	/// MODULATE¿¬»êÀ¸·Î »ö±òÀ» ¼¯À½
+		g_pd3dDevice->SetTextureStageState( 1, D3DTSS_COLOROP,   D3DTOP_MODULATE );	/// MODULATEì—°ì‚°ìœ¼ë¡œ ìƒ‰ê¹”ì„ ì„ìŒ
 		g_pd3dDevice->SetTextureStageState( 1, D3DTSS_COLORARG1, D3DTA_TEXTURE );
 		g_pd3dDevice->SetTextureStageState( 1, D3DTSS_COLORARG2, D3DTA_CURRENT );
 		g_pd3dDevice->SetTextureStageState( 1, D3DTSS_ALPHAOP,   D3DTOP_DISABLE );
@@ -245,11 +259,11 @@ VOID Render()
 		g_pd3dDevice->SetTextureStageState( 2, D3DTSS_ALPHAOP,   D3DTOP_DISABLE );
 
 		DrawMesh( &g_matAni );
-        /// ·»´õ¸µ Á¾·á
+        /// ë Œë”ë§ ì¢…ë£Œ
         g_pd3dDevice->EndScene();
     }
 
-    /// ÈÄ¸é¹öÆÛ¸¦ º¸ÀÌ´Â È­¸éÀ¸·Î!
+    /// í›„ë©´ë²„í¼ë¥¼ ë³´ì´ëŠ” í™”ë©´ìœ¼ë¡œ!
     g_pd3dDevice->Present( NULL, NULL, NULL, NULL );
 }
 
@@ -257,7 +271,7 @@ VOID Render()
 
 
 /**-----------------------------------------------------------------------------
- * À©µµ¿ì ÇÁ·Î½ÃÁ®
+ * ìœˆë„ìš° í”„ë¡œì‹œì ¸
  *------------------------------------------------------------------------------
  */
 LRESULT WINAPI MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
@@ -277,53 +291,55 @@ LRESULT WINAPI MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
 
 /**-----------------------------------------------------------------------------
- * ÇÁ·Î±×·¥ ½ÃÀÛÁ¡
+ * í”„ë¡œê·¸ë¨ ì‹œì‘ì 
  *------------------------------------------------------------------------------
  */
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT )
 {
-    /// À©µµ¿ì Å¬·¡½º µî·Ï
+    /// ìœˆë„ìš° í´ë˜ìŠ¤ ë“±ë¡
     WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, MsgProc, 0L, 0L,
                       GetModuleHandle(NULL), NULL, NULL, NULL, NULL,
                       "BasicFrame", NULL };
     RegisterClassEx( &wc );
 
-    /// À©µµ¿ì »ı¼º
+    /// ìœˆë„ìš° ìƒì„±
     HWND hWnd = CreateWindow( "BasicFrame", "LightMapping",
                               WS_OVERLAPPEDWINDOW, 100, 100, 500, 500,
                               GetDesktopWindow(), NULL, wc.hInstance, NULL );
 
-    /// Direct3D ÃÊ±âÈ­
+    /// Direct3D ì´ˆê¸°í™”
     if( SUCCEEDED( InitD3D( hWnd ) ) )
     {
         if( SUCCEEDED( InitGeometry() ) )
         {
-			/// Ä«¸Ş¶ó Çà·Ä¼³Á¤
+			/// ì¹´ë©”ë¼ í–‰ë ¬ì„¤ì •
 			SetupCamera();
 
-        	/// À©µµ¿ì Ãâ·Â
+        	/// ìœˆë„ìš° ì¶œë ¥
 			ShowWindow( hWnd, SW_SHOWDEFAULT );
 			UpdateWindow( hWnd );
 
-        	/// ¸Ş½ÃÁö ·çÇÁ
+        	/// ë©”ì‹œì§€ ë£¨í”„
 			MSG msg;
 			ZeroMemory( &msg, sizeof(msg) );
 			while( msg.message!=WM_QUIT )
 			{
-            	/// ¸Ş½ÃÁöÅ¥¿¡ ¸Ş½ÃÁö°¡ ÀÖÀ¸¸é ¸Ş½ÃÁö Ã³¸®
+            	/// ë©”ì‹œì§€íì— ë©”ì‹œì§€ê°€ ìˆìœ¼ë©´ ë©”ì‹œì§€ ì²˜ë¦¬
 				if( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
 				{
 					TranslateMessage( &msg );
 					DispatchMessage( &msg );
 				}
 				else
-				/// Ã³¸®ÇÒ ¸Ş½ÃÁö°¡ ¾øÀ¸¸é Render()ÇÔ¼ö È£Ãâ
+				{
+					/// ì²˜ë¦¬í•  ë©”ì‹œì§€ê°€ ì—†ìœ¼ë©´ Render()í•¨ìˆ˜ í˜¸ì¶œ
 					Render();
+				}
 			}
 		}
     }
 
-	/// µî·ÏµÈ Å¬·¡½º ¼Ò°Å
+	/// ë“±ë¡ëœ í´ë˜ìŠ¤ ì†Œê±°
     UnregisterClass( "D3D Tutorial", wc.hInstance );
     return 0;
 }
