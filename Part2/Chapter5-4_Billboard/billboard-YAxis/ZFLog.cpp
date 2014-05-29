@@ -1,4 +1,4 @@
-#include "ZFLog.h"
+Ôªø#include "ZFLog.h"
 #include <time.h>
 
 
@@ -37,18 +37,18 @@ void ZFLog::CreateLogWindow()
 	WNDCLASS	wc;
 	RECT		rc;
 
-	wc.style			= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc		= (WNDPROC)ZFLog::WndProcZFLog;
-	wc.cbClsExtra		= 0;									// No Extra Window Data
-	wc.cbWndExtra		= 0;									// No Extra Window Data
-	wc.hInstance		= GetModuleHandle( NULL );
-	wc.hIcon			= LoadIcon(NULL, IDI_WINLOGO);			// Load The Default Icon
-	wc.hCursor			= LoadCursor(NULL, IDC_ARROW);			// Load The Arrow Pointer
-	wc.hbrBackground	= (HBRUSH)GetStockObject( WHITE_BRUSH) ;
-	wc.lpszMenuName		= NULL;
-	wc.lpszClassName	= "ZLogWindow";
+	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	wc.lpfnWndProc = (WNDPROC)ZFLog::WndProcZFLog;
+	wc.cbClsExtra = 0;									// No Extra Window Data
+	wc.cbWndExtra = 0;									// No Extra Window Data
+	wc.hInstance = GetModuleHandle( NULL );
+	wc.hIcon = LoadIcon( NULL, IDI_WINLOGO );			// Load The Default Icon
+	wc.hCursor = LoadCursor( NULL, IDC_ARROW );			// Load The Arrow Pointer
+	wc.hbrBackground = (HBRUSH)GetStockObject( WHITE_BRUSH );
+	wc.lpszMenuName = NULL;
+	wc.lpszClassName = "ZLogWindow";
 
-	RegisterClass(&wc);
+	RegisterClass( &wc );
 
 	cx = ZF_LOG_WINDOW_CX;
 	cy = ZF_LOG_WINDOW_CY;
@@ -70,37 +70,37 @@ int ZFLog::Log( LPSTR fmt, ... )
 
 	_strdate_s( date );
 	_strtime_s( time );
-	vsprintf_s( buff, fmt, (char *)(&fmt+1) );
+	vsprintf_s( buff, fmt, (char *)( &fmt + 1 ) );
 
-	// Consoleø° √‚∑¬«“ ∞ÊøÏ 
-	if( m_nTarget & ZF_LOG_TARGET_CONSOLE )
+	// ConsoleÏóê Ï∂úÎ†•Ìï† Í≤ΩÏö∞ 
+	if ( m_nTarget & ZF_LOG_TARGET_CONSOLE )
 	{
 		printf_s( "(date[%s] time[%s]) : %s\n", date, time, buff );
 	}
 
-	// Log Fileø° √‚∑¬«“ ∞ÊøÏ
-	if( m_nTarget & ZF_LOG_TARGET_FILE )
+	// Log FileÏóê Ï∂úÎ†•Ìï† Í≤ΩÏö∞
+	if ( m_nTarget & ZF_LOG_TARGET_FILE )
 	{
 		FILE*	fp = NULL;
 		fopen_s( &fp, m_szFilename, "a+" );
-		if( fp )
+		if ( fp )
 		{
 			fprintf( fp, "(date[%s] time[%s]) : %s\n", date, time, buff );
 			fclose( fp );
 		}
 	}
 
-	// Log Windowø° √‚∑¬«“ ∞ÊøÏ 
-	if( m_nTarget & ZF_LOG_TARGET_WINDOW )
+	// Log WindowÏóê Ï∂úÎ†•Ìï† Í≤ΩÏö∞ 
+	if ( m_nTarget & ZF_LOG_TARGET_WINDOW )
 	{
-		SendMessage( m_hwndList, LB_ADDSTRING, 0, (LPARAM) buff );
+		SendMessage( m_hwndList, LB_ADDSTRING, 0, (LPARAM)buff );
 		UINT32 n = SendMessage( m_hwndList, LB_GETCOUNT, 0, 0L ) - 1;
 		SendMessage( m_hwndList, LB_SETCURSEL, (WPARAM)n, 0L );
 	}
 	return 1;
 }
 
-LRESULT CALLBACK 
+LRESULT CALLBACK
 ZFLog::WndProcZFLog( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	return DefWindowProc( hwnd, uMsg, wParam, lParam );

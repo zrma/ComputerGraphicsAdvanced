@@ -1,80 +1,80 @@
-#ifndef _ZCAMERA_H_
+ï»¿#ifndef _ZCAMERA_H_
 #define _ZCAMERA_H_
 
 #include <d3d9.h>
 #include <d3dx9.h>
 
 /**
- * @brief °£´ÜÇÑ Ä«¸Þ¶ó Á¶ÀÛ Å¬·¡½º
- * @author ±èÁöÇÑ(shiva_72@hotmail.com)
- * @todo »ó¹æ90µµ³ª ÇÏ¹æ90µµ¸¦ Ã¼Å©ÇÏÁö ¾Ê¾Æ¼­, ¼öÄ¡ÀûÀ¸·Î ºÒ¾ÈÁ¤ÇÏ´Ù.
- */
+* @brief ê°„ë‹¨í•œ ì¹´ë©”ë¼ ì¡°ìž‘ í´ëž˜ìŠ¤
+* @author ê¹€ì§€í•œ(shiva_72@hotmail.com)
+* @todo ìƒë°©90ë„ë‚˜ í•˜ë°©90ë„ë¥¼ ì²´í¬í•˜ì§€ ì•Šì•„ì„œ, ìˆ˜ì¹˜ì ìœ¼ë¡œ ë¶ˆì•ˆì •í•˜ë‹¤.
+*/
 class ZCamera
 {
-	D3DXVECTOR3		m_vEye;			/// Ä«¸Þ¶óÀÇ ÇöÀç À§Ä¡
-	D3DXVECTOR3		m_vLookat;		/// Ä«¸Þ¶óÀÇ ½Ã¼± À§Ä¡
-	D3DXVECTOR3		m_vUp;			/// Ä«¸Þ¶óÀÇ »ó¹æº¤ÅÍ
+	D3DXVECTOR3		m_vEye;			/// ì¹´ë©”ë¼ì˜ í˜„ìž¬ ìœ„ì¹˜
+	D3DXVECTOR3		m_vLookat;		/// ì¹´ë©”ë¼ì˜ ì‹œì„  ìœ„ì¹˜
+	D3DXVECTOR3		m_vUp;			/// ì¹´ë©”ë¼ì˜ ìƒë°©ë²¡í„°
 
-	D3DXVECTOR3		m_vView;		/// Ä«¸Þ¶ó°¡ ÇâÇÏ´Â ´ÜÀ§¹æÇâº¤ÅÍ
-	D3DXVECTOR3		m_vCross;		/// Ä«¸¶·¹ÀÇ Ãø¸éº¤ÅÍ cross( view, up )
+	D3DXVECTOR3		m_vView;		/// ì¹´ë©”ë¼ê°€ í–¥í•˜ëŠ” ë‹¨ìœ„ë°©í–¥ë²¡í„°
+	D3DXVECTOR3		m_vCross;		/// ì¹´ë§ˆë ˆì˜ ì¸¡ë©´ë²¡í„° cross( view, up )
 
-	D3DXMATRIXA16	m_matView;		/// Ä«¸Þ¶ó Çà·Ä
-	D3DXMATRIXA16	m_matBill;		/// ºôº¸µå Çà·Ä(Ä«¸Þ¶óÀÇ ¿ªÇà·Ä)
+	D3DXMATRIXA16	m_matView;		/// ì¹´ë©”ë¼ í–‰ë ¬
+	D3DXMATRIXA16	m_matBill;		/// ë¹Œë³´ë“œ í–‰ë ¬(ì¹´ë©”ë¼ì˜ ì—­í–‰ë ¬)
 public:
 
-	/// »ý¼ºÀÚ
+	/// ìƒì„±ìž
 	ZCamera();
-	
-	/// Ä«¸Þ¶ó Çà·ÄÀ» ¾ò¾î³½´Ù.
+
+	/// ì¹´ë©”ë¼ í–‰ë ¬ì„ ì–»ì–´ë‚¸ë‹¤.
 	D3DXMATRIXA16*	GetViewMatrix() { return &m_matView; }
-	
-	/// ºôº¸µå Çà·ÄÀ» ¾ò¾î³½´Ù.
+
+	/// ë¹Œë³´ë“œ í–‰ë ¬ì„ ì–»ì–´ë‚¸ë‹¤.
 	D3DXMATRIXA16*	GetBillMatrix() { return &m_matBill; }
 
 public:
 
-	/// Ä«¸Þ¶ó Çà·ÄÀ» »ý¼ºÇÏ±âÀ§ÇÑ ±âº» º¤ÅÍ°ªµéÀ» ¼³Á¤ÇÑ´Ù.
-	D3DXMATRIXA16*	SetView( D3DXVECTOR3* pvEye,D3DXVECTOR3* pvLookat,D3DXVECTOR3* pvUp);
+	/// ì¹´ë©”ë¼ í–‰ë ¬ì„ ìƒì„±í•˜ê¸°ìœ„í•œ ê¸°ë³¸ ë²¡í„°ê°’ë“¤ì„ ì„¤ì •í•œë‹¤.
+	D3DXMATRIXA16*	SetView( D3DXVECTOR3* pvEye, D3DXVECTOR3* pvLookat, D3DXVECTOR3* pvUp );
 
-	/// Ä«¸Þ¶óÀÇ À§Ä¡°ªÀ» ¼³Á¤ÇÑ´Ù.
+	/// ì¹´ë©”ë¼ì˜ ìœ„ì¹˜ê°’ì„ ì„¤ì •í•œë‹¤.
 	void			SetEye( D3DXVECTOR3* pv ) { m_vEye = *pv; }
-	
-	/// Ä«¸Þ¶óÀÇ À§Ä¡°ªÀ» ¾ò¾î³½´Ù.
+
+	/// ì¹´ë©”ë¼ì˜ ìœ„ì¹˜ê°’ì„ ì–»ì–´ë‚¸ë‹¤.
 	D3DXVECTOR3*	GetEye() { return &m_vEye; }
-	
-	/// Ä«¸Þ¶óÀÇ ½Ã¼±°ªÀ» ¼³Á¤ÇÑ´Ù.
+
+	/// ì¹´ë©”ë¼ì˜ ì‹œì„ ê°’ì„ ì„¤ì •í•œë‹¤.
 	void			SetLookat( D3DXVECTOR3* pv ) { m_vLookat = *pv; }
 
-	/// Ä«¸Þ¶óÀÇ ½Ã¼±°ªÀ» ¾ò¾î³½´Ù.
+	/// ì¹´ë©”ë¼ì˜ ì‹œì„ ê°’ì„ ì–»ì–´ë‚¸ë‹¤.
 	D3DXVECTOR3*	GetLookat() { return &m_vLookat; }
-	
-	/// Ä«¸Þ¶óÀÇ »ó¹æº¤ÅÍ°ªÀ» ¼³Á¤ÇÑ´Ù.
+
+	/// ì¹´ë©”ë¼ì˜ ìƒë°©ë²¡í„°ê°’ì„ ì„¤ì •í•œë‹¤.
 	void			SetUp( D3DXVECTOR3* pv ) { m_vUp = *pv; }
-	
-	/// Ä«¸Þ¶óÀÇ »ó¹æº¤ÅÍ°ªÀ» ¾ò¾î³½´Ù.
+
+	/// ì¹´ë©”ë¼ì˜ ìƒë°©ë²¡í„°ê°’ì„ ì–»ì–´ë‚¸ë‹¤.
 	D3DXVECTOR3*	GetUp() { return &m_vUp; }
-	
-	/// °ªÀ» °»½ÅÇÑ´Ù.
+
+	/// ê°’ì„ ê°±ì‹ í•œë‹¤.
 	void			Flush() { SetView( &m_vEye, &m_vLookat, &m_vUp ); }
 
-	/// Ä«¸Þ¶ó ÁÂÇ¥°èÀÇ XÃàÀ¸·Î angle¸¸Å­ È¸ÀüÇÑ´Ù.
+	/// ì¹´ë©”ë¼ ì¢Œí‘œê³„ì˜ Xì¶•ìœ¼ë¡œ angleë§Œí¼ íšŒì „í•œë‹¤.
 	D3DXMATRIXA16*	RotateLocalX( float angle );
-	
-	/// Ä«¸Þ¶ó ÁÂÇ¥°èÀÇ YÃàÀ¸·Î angle¸¸Å­ È¸ÀüÇÑ´Ù.
+
+	/// ì¹´ë©”ë¼ ì¢Œí‘œê³„ì˜ Yì¶•ìœ¼ë¡œ angleë§Œí¼ íšŒì „í•œë‹¤.
 	D3DXMATRIXA16*	RotateLocalY( float angle );
 
-//	D3DXMATRIXA16*	RotateLocalZ( float angle );
+	//	D3DXMATRIXA16*	RotateLocalZ( float angle );
 
-	/// ¿ùµåÁÂÇ¥°èÀÇ *pv°ªÀÇ À§Ä¡·Î ÀÌµ¿ÇÑ´Ù.
+	/// ì›”ë“œì¢Œí‘œê³„ì˜ *pvê°’ì˜ ìœ„ì¹˜ë¡œ ì´ë™í•œë‹¤.
 	D3DXMATRIXA16*	MoveTo( D3DXVECTOR3* pv );
-	
-	/// Ä«¸Þ¶ó ÁÂÇ¥°èÀÇ XÃà¹æÇâÀ¸·Î dist¸¸Å­ ÀüÁøÇÑ´Ù.(ÈÄÁøÀº -dist¸¦ ³ÖÀ¸¸é µÈ´Ù.)
+
+	/// ì¹´ë©”ë¼ ì¢Œí‘œê³„ì˜ Xì¶•ë°©í–¥ìœ¼ë¡œ distë§Œí¼ ì „ì§„í•œë‹¤.(í›„ì§„ì€ -distë¥¼ ë„£ìœ¼ë©´ ëœë‹¤.)
 	D3DXMATRIXA16*	MoveLocalX( float dist );
 
-	/// Ä«¸Þ¶ó ÁÂÇ¥°èÀÇ YÃà¹æÇâÀ¸·Î dist¸¸Å­ ÀüÁøÇÑ´Ù.(ÈÄÁøÀº -dist¸¦ ³ÖÀ¸¸é µÈ´Ù.)
+	/// ì¹´ë©”ë¼ ì¢Œí‘œê³„ì˜ Yì¶•ë°©í–¥ìœ¼ë¡œ distë§Œí¼ ì „ì§„í•œë‹¤.(í›„ì§„ì€ -distë¥¼ ë„£ìœ¼ë©´ ëœë‹¤.)
 	D3DXMATRIXA16*	MoveLocalY( float dist );
 
-	/// Ä«¸Þ¶ó ÁÂÇ¥°èÀÇ ZÃà¹æÇâÀ¸·Î dist¸¸Å­ ÀüÁøÇÑ´Ù.(ÈÄÁøÀº -dist¸¦ ³ÖÀ¸¸é µÈ´Ù.)
+	/// ì¹´ë©”ë¼ ì¢Œí‘œê³„ì˜ Zì¶•ë°©í–¥ìœ¼ë¡œ distë§Œí¼ ì „ì§„í•œë‹¤.(í›„ì§„ì€ -distë¥¼ ë„£ìœ¼ë©´ ëœë‹¤.)
 	D3DXMATRIXA16*	MoveLocalZ( float dist );
 };
 

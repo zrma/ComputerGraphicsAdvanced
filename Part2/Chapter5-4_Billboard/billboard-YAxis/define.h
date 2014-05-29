@@ -1,4 +1,4 @@
-#ifndef _DEFINE_H_
+﻿#ifndef _DEFINE_H_
 #define _DEFINE_H_
 
 #include <d3d9.h>
@@ -11,15 +11,15 @@
 #endif
 
 #ifndef S_DEL
-	#define S_DEL(p)		{ if(p) { delete (p); (p) = NULL; } }
+#define S_DEL(p)		{ if(p) { delete (p); (p) = NULL; } }
 #endif
 
 #ifndef S_DELS
-	#define S_DELS(p)		{ if(p) { delete[] (p); (p) = NULL; } }
+#define S_DELS(p)		{ if(p) { delete[] (p); (p) = NULL; } }
 #endif
 
 #ifndef S_REL
-	#define S_REL(p)		{ if(p) { (p)->Release(); (p) = NULL; } }
+#define S_REL(p)		{ if(p) { (p)->Release(); (p) = NULL; } }
 #endif
 
 #define IS_IN_RANGE(value,r0,r1) (( ((r0) <= (value)) && ((value) <= (r1)) ) ? 1 : 0)
@@ -28,7 +28,7 @@
 
 struct TERRAINVERTEX
 {
-	enum _FVF { FVF=(D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_TEX1) };
+	enum _FVF { FVF = ( D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1 ) };
 	D3DXVECTOR3	p;
 	D3DXVECTOR3	n;
 	D3DXVECTOR2	t;
