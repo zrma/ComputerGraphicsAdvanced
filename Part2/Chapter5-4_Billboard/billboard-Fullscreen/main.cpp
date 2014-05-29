@@ -50,8 +50,10 @@ ZWater*					g_pWater = NULL;
 HRESULT InitD3D( HWND hWnd )
 {
     // 디바이스를 생성하기위한 D3D객체 생성
-    if( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
-        return E_FAIL;
+	if ( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
+	{
+		return E_FAIL;
+	}
 
     // 디바이스를 생성할 구조체
     // 복잡한 오브젝트를 그릴것이기때문에, 이번에는 Z버퍼가 필요하다.
@@ -64,12 +66,11 @@ HRESULT InitD3D( HWND hWnd )
     d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
 
     /// 디바이스 생성
-    if( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
-                                      D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-                                      &d3dpp, &g_pd3dDevice ) ) )
-    {
-        return E_FAIL;
-    }
+	if ( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
+		D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &g_pd3dDevice ) ) )
+	{
+		return E_FAIL;
+	}
 
     // 기본컬링, CCW
     g_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
@@ -166,7 +167,10 @@ void DeleteObjects()
  */
 VOID Cleanup()
 {
-	for( int i = 0 ; i < 4 ; i++ ) S_REL( g_pTexBillboard[i] );
+	for ( int i = 0; i < 4; i++ )
+	{
+		S_REL( g_pTexBillboard[i] );
+	}
 	S_REL( g_pd3dDevice );
 	S_REL( g_pD3D );
 }
@@ -265,8 +269,14 @@ void ProcessMouse( void )
  */
 void ProcessKey( void )
 {
-	if( GetAsyncKeyState( 'A' ) ) g_pCamera->MoveLocalZ( 0.5f );	// 카메라 전진!
-	if( GetAsyncKeyState( 'Z' ) ) g_pCamera->MoveLocalZ( -0.5f );	// 카메라 후진!
+	if ( GetAsyncKeyState( 'A' ) )
+	{
+		g_pCamera->MoveLocalZ( 0.5f );	// 카메라 전진!
+	}
+	if ( GetAsyncKeyState( 'Z' ) )
+	{
+		g_pCamera->MoveLocalZ( -0.5f );	// 카메라 후진!
+	}
 }
 
 /**-----------------------------------------------------------------------------
@@ -304,9 +314,9 @@ void DrawBillboard()
 	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP );
 	g_pd3dDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP );
 
-	g_pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE,   TRUE );
+	g_pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE );
 	g_pd3dDevice->SetRenderState( D3DRS_ALPHATESTENABLE, TRUE );
-	g_pd3dDevice->SetRenderState( D3DRS_ALPHAREF,        0x08 );
+	g_pd3dDevice->SetRenderState( D3DRS_ALPHAREF, 0x08 );
 	g_pd3dDevice->SetRenderState( D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL );
 
 	struct UV
@@ -322,12 +332,12 @@ void DrawBillboard()
 	};
 
 	// 빌보드 정점
-	static MYVERTEX vtx[4] = 
-	{ 
-		{ -1,  0, 0, 0, 1 },
-		{ -1,  4, 0, 0, 0 },
-		{  1,  0, 0, 1, 1 },
-		{  1,  4, 0, 1, 0 }
+	static MYVERTEX vtx[4] =
+	{
+		{ -1, 0, 0, 0, 1 },
+		{ -1, 4, 0, 0, 0 },
+		{ 1, 0, 0, 1, 1 },
+		{ 1, 4, 0, 1, 0 }
 	};
 	static UV tblUV[16][4] =
 	{
@@ -356,9 +366,9 @@ void DrawBillboard()
 	D3DXMatrixIdentity( &matBillboard );
 
 
-	if( (GetTickCount() - nTick) > 100 )
+	if ( ( GetTickCount() - nTick ) > 100 )
 	{
-		nStep = (nStep++)%16;
+		nStep = ( nStep++ ) % 16;
 		nTick = GetTickCount();
 	}
 
@@ -367,7 +377,7 @@ void DrawBillboard()
 	g_pd3dDevice->SetFVF( MYVERTEX::FVF );
 
 	// Y축 빌보드
-	if( g_bBillboard )
+	if ( g_bBillboard )
 	{
 		// Y축 회전행렬은 _11, _13, _31, _33번 행렬에 회전값이 들어간다
 		// 카메라의 Y축 회전행렬값을 읽어서 역행렬을 만들면 X,Z축이 고정된
@@ -380,17 +390,17 @@ void DrawBillboard()
 	}
 
 	// 빌보드의 좌표를 바꿔가며 나무를 먼저 찍는다
-	g_pd3dDevice->SetRenderState( D3DRS_SRCBLEND,  D3DBLEND_SRCALPHA );
+	g_pd3dDevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_SRCALPHA );
 	g_pd3dDevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
-	for( int z = 0 ; z <= 40 ; z += 5 )
+	for ( int z = 0; z <= 40; z += 5 )
 	{
-		for( int x = 0 ; x <= 40 ; x += 5 )
+		for ( int x = 0; x <= 40; x += 5 )
 		{
-			matBillboard._41 = static_cast<float>(x - 20);
+			matBillboard._41 = static_cast<float>( x - 20 );
 			matBillboard._42 = 0;
-			matBillboard._43 = static_cast<float>(z - 20);
-			g_pd3dDevice->SetTexture( 0, g_pTexBillboard[(x+z)%4] );
-			if( (x+z)%4 == 3 )
+			matBillboard._43 = static_cast<float>( z - 20 );
+			g_pd3dDevice->SetTexture( 0, g_pTexBillboard[( x + z ) % 4] );
+			if ( ( x + z ) % 4 == 3 )
 				continue;
 			else
 			{
@@ -403,43 +413,44 @@ void DrawBillboard()
 				vtx[3].uv.u = 1;
 				vtx[3].uv.v = 0;
 				g_pd3dDevice->SetTransform( D3DTS_WORLD, &matBillboard );
-				g_pd3dDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, vtx, sizeof(MYVERTEX) );
+				g_pd3dDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, vtx, sizeof( MYVERTEX ) );
 			}
 		}
 	}
 
 	// 빌보드의 좌표를 바꿔가며 폭발 이미지를 찍는다
-	g_pd3dDevice->SetRenderState( D3DRS_SRCBLEND,  D3DBLEND_SRCCOLOR );
+	g_pd3dDevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_SRCCOLOR );
 	g_pd3dDevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_ONE );
 	g_pd3dDevice->SetRenderState( D3DRS_ZWRITEENABLE, FALSE );
 	// 전체 화면 빌보드
-	if( g_bBillboard )
+	if ( g_bBillboard )
 	{
 		matBillboard = *g_pCamera->GetViewMatrix();
 		D3DXMatrixInverse( &matBillboard, NULL, &matBillboard );
 	}
-	for( int z = 40 ; z >= 0 ; z -= 5 )
+	// for ( int z = 0; z <= 40; z += 5 )
+	for ( int z = 40; z >= 0; z -= 5 )
 	{
-		for( int x = 40 ; x >= 0 ; x -= 5 )
+		for ( int x = 40; x >= 0; x -= 5 )
 		{
-			matBillboard._41 = static_cast<float>(x - 20);
+			matBillboard._41 = static_cast<float>( x - 20 );
 			matBillboard._42 = 0;
-			matBillboard._43 = static_cast<float>(z - 20);
-			g_pd3dDevice->SetTexture( 0, g_pTexBillboard[(x+z)%4] );
-			if( (x+z)%4 == 3 )
+			matBillboard._43 = static_cast<float>( z - 20 );
+			g_pd3dDevice->SetTexture( 0, g_pTexBillboard[( x + z ) % 4] );
+			if ( ( x + z ) % 4 == 3 )
 			{
 				vtx[0].uv = tblUV[nStep][0];
 				vtx[1].uv = tblUV[nStep][1];
 				vtx[2].uv = tblUV[nStep][2];
 				vtx[3].uv = tblUV[nStep][3];
 				g_pd3dDevice->SetTransform( D3DTS_WORLD, &matBillboard );
-				g_pd3dDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, vtx, sizeof(MYVERTEX) );
+				g_pd3dDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, vtx, sizeof( MYVERTEX ) );
 			}
 		}
 	}
 
 	g_pd3dDevice->SetRenderState( D3DRS_ZWRITEENABLE, TRUE );
-	g_pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE,   FALSE );
+	g_pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
 	g_pd3dDevice->SetRenderState( D3DRS_ALPHATESTENABLE, FALSE );
 	g_pd3dDevice->SetTransform( D3DTS_WORLD, &g_matWorld );
 }

@@ -1,20 +1,20 @@
-#ifndef _ZWATER_H_
+ï»¿#ifndef _ZWATER_H_
 #define _ZWATER_H_
 
 #include "define.h"
 
 class ZWater
 {
-	LPDIRECT3DDEVICE9       m_pDev;		// ·»´õ¸µ¿¡ »ç¿ëµÉ D3Dµğ¹ÙÀÌ½º
-	LPDIRECT3DVERTEXBUFFER9 m_pVB;		// Á¤Á¡À» º¸°üÇÒ Á¤Á¡¹öÆÛ
-	LPDIRECT3DINDEXBUFFER9	m_pIB;		// ÀÎµ¦½º¸¦ º¸°üÇÒ ÀÎµ¦½º¹öÆÛ
-	LPDIRECT3DTEXTURE9		m_pTexWater[2];// ¹°À» Ç¥ÇöÇÒTexture
-	int						m_cx;		// ¹°ÀÇ xÅ©±â
-	int						m_cz;		// ¹°ÀÇ zÅ©±â
-	int						m_nWaveTick;// m_nWaveTick¿¡ ÇÑ¹ø¾¿ ¾Ö´Ï¸ŞÀÌ¼Ç ÇÑ´Ù
+	LPDIRECT3DDEVICE9       m_pDev;		// ë Œë”ë§ì— ì‚¬ìš©ë  D3Dë””ë°”ì´ìŠ¤
+	LPDIRECT3DVERTEXBUFFER9 m_pVB;		// ì •ì ì„ ë³´ê´€í•  ì •ì ë²„í¼
+	LPDIRECT3DINDEXBUFFER9	m_pIB;		// ì¸ë±ìŠ¤ë¥¼ ë³´ê´€í•  ì¸ë±ìŠ¤ë²„í¼
+	LPDIRECT3DTEXTURE9		m_pTexWater[2];// ë¬¼ì„ í‘œí˜„í• Texture
+	int						m_cx;		// ë¬¼ì˜ xí¬ê¸°
+	int						m_cz;		// ë¬¼ì˜ zí¬ê¸°
+	int						m_nWaveTick;// m_nWaveTickì— í•œë²ˆì”© ì• ë‹ˆë©”ì´ì…˜ í•œë‹¤
 	int						m_nPrevTick;
-	float					m_fWave;	// ÅØ½ºÃ³¸¦ ÀÌµ¿½ÃÅ³ °ª
-	float					m_fDir;		// ÅØ½ºÃ³ÀÇ ÀÌµ¿¹æÇâ
+	float					m_fWave;	// í…ìŠ¤ì²˜ë¥¼ ì´ë™ì‹œí‚¬ ê°’
+	float					m_fDir;		// í…ìŠ¤ì²˜ì˜ ì´ë™ë°©í–¥
 
 	struct WATERVERTEX
 	{
@@ -25,15 +25,15 @@ class ZWater
 	};
 
 protected:
-	int	_LoadTextures();	// ÅØ½ºÃ³¸¦ ·ÎµùÇÑ´Ù
-	int _CreateVIB();		// Á¤Á¡¹öÆÛ¸¦ ¸¸µç´Ù
-	int _WaveTexture();		// ÅØ½ºÃ³¸¦ ¾Ö´Ï¸ŞÀÌ¼Ç ÇÑ´Ù
+	int	_LoadTextures();	// í…ìŠ¤ì²˜ë¥¼ ë¡œë”©í•œë‹¤
+	int _CreateVIB();		// ì •ì ë²„í¼ë¥¼ ë§Œë“ ë‹¤
+	int _WaveTexture();		// í…ìŠ¤ì²˜ë¥¼ ì• ë‹ˆë©”ì´ì…˜ í•œë‹¤
 
 public:
 	ZWater();
 	~ZWater();
 	int Create( LPDIRECT3DDEVICE9 pDev, int cx, int cz, int nSpeed );
-	int Draw();				// ±×¸°´Ù... -_-
+	int Draw();				// ê·¸ë¦°ë‹¤... -_-
 };
 
 #endif // _ZWATER_H_
