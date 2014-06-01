@@ -1,10 +1,10 @@
-/**-----------------------------------------------------------------------------
- * \brief Å°ÇÁ·¹ÀÓ ¹æ½ÄÀÇ ¾Ö´Ï¸ŞÀÌ¼Ç
- * ÆÄÀÏ: Animate.cpp
+ï»¿/**-----------------------------------------------------------------------------
+ * \brief í‚¤í”„ë ˆì„ ë°©ì‹ì˜ ì• ë‹ˆë©”ì´ì…˜
+ * íŒŒì¼: Animate.cpp
  *
- * ¼³¸í: ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ °¡Àå ´ëÇ¥ÀûÀÎ ±â¹ıÀº Å°ÇÁ·¹ÀÓ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ´Ù.
- *       ¿ì¸®´Â Position°ú RotationÀÇ Å°°ªÀ» ¸¸µé°í, ÀÌµé Å°¸¦ º¸°£(interpoate)
- *       ÇÏ´Â ¾Ö´Ï¸ŞÀÌ¼ÇÀ» Á¦ÀÛÇØ º¼ °ÍÀÌ´Ù.
+ * ì„¤ëª…: ì• ë‹ˆë©”ì´ì…˜ì˜ ê°€ì¥ ëŒ€í‘œì ì¸ ê¸°ë²•ì€ í‚¤í”„ë ˆì„ ì• ë‹ˆë©”ì´ì…˜ì´ë‹¤.
+ *       ìš°ë¦¬ëŠ” Positionê³¼ Rotationì˜ í‚¤ê°’ì„ ë§Œë“¤ê³ , ì´ë“¤ í‚¤ë¥¼ ë³´ê°„(interpoate)
+ *       í•˜ëŠ” ì• ë‹ˆë©”ì´ì…˜ì„ ì œì‘í•´ ë³¼ ê²ƒì´ë‹¤.
  *------------------------------------------------------------------------------
  */
 
@@ -14,53 +14,54 @@
 
 
 /**-----------------------------------------------------------------------------
- *  Àü¿ªº¯¼ö
+ *  ì „ì—­ë³€ìˆ˜
  *------------------------------------------------------------------------------
  */
-LPDIRECT3D9             g_pD3D       = NULL; /// D3D µğ¹ÙÀÌ½º¸¦ »ı¼ºÇÒ D3D°´Ã¼º¯¼ö
-LPDIRECT3DDEVICE9       g_pd3dDevice = NULL; /// ·»´õ¸µ¿¡ »ç¿ëµÉ D3Dµğ¹ÙÀÌ½º
-LPDIRECT3DVERTEXBUFFER9 g_pVB        = NULL; /// Á¤Á¡À» º¸°üÇÒ Á¤Á¡¹öÆÛ
-LPDIRECT3DINDEXBUFFER9	g_pIB        = NULL; /// ÀÎµ¦½º¸¦ º¸°üÇÒ ÀÎµ¦½º¹öÆÛ
+LPDIRECT3D9             g_pD3D       = NULL; /// D3D ë””ë°”ì´ìŠ¤ë¥¼ ìƒì„±í•  D3Dê°ì²´ë³€ìˆ˜
+LPDIRECT3DDEVICE9       g_pd3dDevice = NULL; /// ë Œë”ë§ì— ì‚¬ìš©ë  D3Dë””ë°”ì´ìŠ¤
+LPDIRECT3DVERTEXBUFFER9 g_pVB        = NULL; /// ì •ì ì„ ë³´ê´€í•  ì •ì ë²„í¼
+LPDIRECT3DINDEXBUFFER9	g_pIB        = NULL; /// ì¸ë±ìŠ¤ë¥¼ ë³´ê´€í•  ì¸ë±ìŠ¤ë²„í¼
 
-D3DXMATRIXA16			g_matTMParent;	/// ºÎ¸ğÀÇ TM
-D3DXMATRIXA16			g_matRParent;	/// ºÎ¸ğÀÇ È¸ÀüÇà·Ä
+D3DXMATRIXA16			g_matTMParent;	/// ë¶€ëª¨ì˜ TM
+D3DXMATRIXA16			g_matRParent;	/// ë¶€ëª¨ì˜ íšŒì „í–‰ë ¬
 
-D3DXMATRIXA16			g_matTMChild;	/// ÀÚ½ÄÀÇ TM
-D3DXMATRIXA16			g_matRChild;	/// ÀÚ½ÄÀÇ È¸ÀüÇà·Ä
+D3DXMATRIXA16			g_matTMChild;	/// ìì‹ì˜ TM
+D3DXMATRIXA16			g_matRChild;	/// ìì‹ì˜ íšŒì „í–‰ë ¬
 
 float					g_fRot = 0.0f;
 
-/// »ç¿ëÀÚ Á¤Á¡À» Á¤ÀÇÇÒ ±¸Á¶Ã¼
+/// ì‚¬ìš©ì ì •ì ì„ ì •ì˜í•  êµ¬ì¡°ì²´
 struct CUSTOMVERTEX
 {
-    FLOAT x, y, z;	/// Á¤Á¡ÀÇ º¯È¯µÈ ÁÂÇ¥
-    DWORD color;	/// Á¤Á¡ÀÇ »ö±ò
+    FLOAT x, y, z;	/// ì •ì ì˜ ë³€í™˜ëœ ì¢Œí‘œ
+    DWORD color;	/// ì •ì ì˜ ìƒ‰ê¹”
 };
 
-/// »ç¿ëÀÚ Á¤Á¡ ±¸Á¶Ã¼¿¡ °üÇÑ Á¤º¸¸¦ ³ªÅ¸³»´Â FVF°ª
+/// ì‚¬ìš©ì ì •ì  êµ¬ì¡°ì²´ì— ê´€í•œ ì •ë³´ë¥¼ ë‚˜íƒ€ë‚´ëŠ” FVFê°’
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE)
 
 struct MYINDEX
 {
-	WORD	_0, _1, _2;		/// ÀÏ¹İÀûÀ¸·Î ÀÎµ¦½º´Â 16ºñÆ®ÀÇ Å©±â¸¦ °®´Â´Ù.
+	WORD	_0, _1, _2;		/// ì¼ë°˜ì ìœ¼ë¡œ ì¸ë±ìŠ¤ëŠ” 16ë¹„íŠ¸ì˜ í¬ê¸°ë¥¼ ê°–ëŠ”ë‹¤.
 };
 
-/// ¾Ö´Ï¸ŞÀÌ¼Ç Å°°ªÀ» º¸°£ÇÏ±âÀ§ÇÑ ¹è¿­
-D3DXVECTOR3		g_aniPos[2];		/// À§Ä¡(position)Å° °ª
-D3DXQUATERNION	g_aniRot[2];		/// È¸Àü(quaternion)Å° °ª
+/// ì• ë‹ˆë©”ì´ì…˜ í‚¤ê°’ì„ ë³´ê°„í•˜ê¸°ìœ„í•œ ë°°ì—´
+D3DXVECTOR3		g_aniPos[2];		/// ìœ„ì¹˜(position)í‚¤ ê°’
+D3DXQUATERNION	g_aniRot[2];		/// íšŒì „(quaternion)í‚¤ ê°’
 
 /**-----------------------------------------------------------------------------
- * Direct3D ÃÊ±âÈ­
+ * Direct3D ì´ˆê¸°í™”
  *------------------------------------------------------------------------------
  */
 HRESULT InitD3D( HWND hWnd )
 {
-    /// µğ¹ÙÀÌ½º¸¦ »ı¼ºÇÏ±âÀ§ÇÑ D3D°´Ã¼ »ı¼º
-    if( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
-        return E_FAIL;
-
-    /// µğ¹ÙÀÌ½º¸¦ »ı¼ºÇÒ ±¸Á¶Ã¼
-    /// º¹ÀâÇÑ ¿ÀºêÁ§Æ®¸¦ ±×¸±°ÍÀÌ±â¶§¹®¿¡, ÀÌ¹ø¿¡´Â Z¹öÆÛ°¡ ÇÊ¿äÇÏ´Ù.
+    /// ë””ë°”ì´ìŠ¤ë¥¼ ìƒì„±í•˜ê¸°ìœ„í•œ D3Dê°ì²´ ìƒì„±
+	if ( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
+	{
+		return E_FAIL;
+	}
+    /// ë””ë°”ì´ìŠ¤ë¥¼ ìƒì„±í•  êµ¬ì¡°ì²´
+    /// ë³µì¡í•œ ì˜¤ë¸Œì íŠ¸ë¥¼ ê·¸ë¦´ê²ƒì´ê¸°ë•Œë¬¸ì—, ì´ë²ˆì—ëŠ” Zë²„í¼ê°€ í•„ìš”í•˜ë‹¤.
     D3DPRESENT_PARAMETERS d3dpp;
     ZeroMemory( &d3dpp, sizeof(d3dpp) );
     d3dpp.Windowed = TRUE;
@@ -69,21 +70,20 @@ HRESULT InitD3D( HWND hWnd )
     d3dpp.EnableAutoDepthStencil = TRUE;
     d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
 
-    /// µğ¹ÙÀÌ½º »ı¼º
-    if( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
-                                      D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-                                      &d3dpp, &g_pd3dDevice ) ) )
-    {
-        return E_FAIL;
-    }
+    /// ë””ë°”ì´ìŠ¤ ìƒì„±
+	if ( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
+		D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &g_pd3dDevice ) ) )
+	{
+		return E_FAIL;
+	}
 
-    /// ÄÃ¸µ±â´ÉÀ» ²ö´Ù.
+    /// ì»¬ë§ê¸°ëŠ¥ì„ ëˆë‹¤.
     g_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
 
-    /// Z¹öÆÛ±â´ÉÀ» ÄÒ´Ù.
+    /// Zë²„í¼ê¸°ëŠ¥ì„ ì¼ ë‹¤.
     g_pd3dDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
 
-    /// Á¤Á¡¿¡ »ö±ò°ªÀÌ ÀÖÀ¸¹Ç·Î, ±¤¿ø±â´ÉÀ» ²ö´Ù.
+    /// ì •ì ì— ìƒ‰ê¹”ê°’ì´ ìˆìœ¼ë¯€ë¡œ, ê´‘ì›ê¸°ëŠ¥ì„ ëˆë‹¤.
     g_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 
     return S_OK;
@@ -93,12 +93,12 @@ HRESULT InitD3D( HWND hWnd )
 
 
 /**-----------------------------------------------------------------------------
- * Á¤Á¡¹öÆÛ¸¦ »ı¼ºÇÏ°í Á¤Á¡°ªÀ» Ã¤¿ö³Ö´Â´Ù.
+ * ì •ì ë²„í¼ë¥¼ ìƒì„±í•˜ê³  ì •ì ê°’ì„ ì±„ì›Œë„£ëŠ”ë‹¤.
  *------------------------------------------------------------------------------
  */
 HRESULT InitVB()
 {
-    /// »óÀÚ(cube)¸¦ ·»´õ¸µÇÏ±âÀ§ÇØ 8°³ÀÇ Á¤Á¡À» ¼±¾ğ
+    /// ìƒì(cube)ë¥¼ ë Œë”ë§í•˜ê¸°ìœ„í•´ 8ê°œì˜ ì •ì ì„ ì„ ì–¸
     CUSTOMVERTEX vertices[] =
     {
 		{ -1,  1,  1 , 0xffff0000 },		/// v0
@@ -112,21 +112,22 @@ HRESULT InitVB()
 		{ -1, -1, -1 , 0xffffffff },		/// v7
     };
 
-    /// Á¤Á¡¹öÆÛ »ı¼º
-    /// 8°³ÀÇ »ç¿ëÀÚÁ¤Á¡À» º¸°üÇÒ ¸Ş¸ğ¸®¸¦ ÇÒ´çÇÑ´Ù.
-    /// FVF¸¦ ÁöÁ¤ÇÏ¿© º¸°üÇÒ µ¥ÀÌÅÍÀÇ Çü½ÄÀ» ÁöÁ¤ÇÑ´Ù.
-    if( FAILED( g_pd3dDevice->CreateVertexBuffer( 8*sizeof(CUSTOMVERTEX),
-                                                  0, D3DFVF_CUSTOMVERTEX,
-                                                  D3DPOOL_DEFAULT, &g_pVB, NULL ) ) )
-    {
-        return E_FAIL;
-    }
+    /// ì •ì ë²„í¼ ìƒì„±
+    /// 8ê°œì˜ ì‚¬ìš©ìì •ì ì„ ë³´ê´€í•  ë©”ëª¨ë¦¬ë¥¼ í• ë‹¹í•œë‹¤.
+    /// FVFë¥¼ ì§€ì •í•˜ì—¬ ë³´ê´€í•  ë°ì´í„°ì˜ í˜•ì‹ì„ ì§€ì •í•œë‹¤.
+	if ( FAILED( g_pd3dDevice->CreateVertexBuffer( 8 * sizeof( CUSTOMVERTEX ),
+		0, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &g_pVB, NULL ) ) )
+	{
+		return E_FAIL;
+	}
 
-    /// Á¤Á¡¹öÆÛ¸¦ °ªÀ¸·Î Ã¤¿î´Ù. 
-    /// Á¤Á¡¹öÆÛÀÇ Lock()ÇÔ¼ö¸¦ È£ÃâÇÏ¿© Æ÷ÀÎÅÍ¸¦ ¾ò¾î¿Â´Ù.
+    /// ì •ì ë²„í¼ë¥¼ ê°’ìœ¼ë¡œ ì±„ìš´ë‹¤. 
+    /// ì •ì ë²„í¼ì˜ Lock()í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì—¬ í¬ì¸í„°ë¥¼ ì–»ì–´ì˜¨ë‹¤.
     VOID* pVertices;
-    if( FAILED( g_pVB->Lock( 0, sizeof(vertices), (void**)&pVertices, 0 ) ) )
-        return E_FAIL;
+	if ( FAILED( g_pVB->Lock( 0, sizeof( vertices ), (void**)&pVertices, 0 ) ) )
+	{
+		return E_FAIL;
+	}
     memcpy( pVertices, vertices, sizeof(vertices) );
     g_pVB->Unlock();
 
@@ -135,35 +136,37 @@ HRESULT InitVB()
 
 
 /**-----------------------------------------------------------------------------
- * ÀÎµ¦½º¹öÆÛ¸¦ »ı¼ºÇÏ°í ÀÎµ¦½º°ªÀ» Ã¤¿ö³Ö´Â´Ù.
+ * ì¸ë±ìŠ¤ë²„í¼ë¥¼ ìƒì„±í•˜ê³  ì¸ë±ìŠ¤ê°’ì„ ì±„ì›Œë„£ëŠ”ë‹¤.
  *------------------------------------------------------------------------------
  */
 HRESULT InitIB()
 {
-    /// »óÀÚ(cube)¸¦ ·»´õ¸µÇÏ±âÀ§ÇØ 12°³ÀÇ ¸éÀ» ¼±¾ğ
+    /// ìƒì(cube)ë¥¼ ë Œë”ë§í•˜ê¸°ìœ„í•´ 12ê°œì˜ ë©´ì„ ì„ ì–¸
     MYINDEX	indices[] =
     {
-		{ 0, 1, 2 }, { 0, 2, 3 },	/// À­¸é
-		{ 4, 6, 5 }, { 4, 7, 6 },	/// ¾Æ·§¸é
-		{ 0, 3, 7 }, { 0, 7, 4 },	/// ¿Ş¸é
-		{ 1, 5, 6 }, { 1, 6, 2 },	/// ¿À¸¥¸é
-		{ 3, 2, 6 }, { 3, 6, 7 },	/// ¾Õ¸é
-		{ 0, 4, 5 }, { 0, 5, 1 }	/// µŞ¸é
+		{ 0, 1, 2 }, { 0, 2, 3 },	/// ìœ—ë©´
+		{ 4, 6, 5 }, { 4, 7, 6 },	/// ì•„ë«ë©´
+		{ 0, 3, 7 }, { 0, 7, 4 },	/// ì™¼ë©´
+		{ 1, 5, 6 }, { 1, 6, 2 },	/// ì˜¤ë¥¸ë©´
+		{ 3, 2, 6 }, { 3, 6, 7 },	/// ì•ë©´
+		{ 0, 4, 5 }, { 0, 5, 1 }	/// ë’·ë©´
     };
 
-    /// ÀÎµ¦½º¹öÆÛ »ı¼º
-	/// D3DFMT_INDEX16Àº ÀÎµ¦½ºÀÇ ´ÜÀ§°¡ 16ºñÆ® ¶ó´Â °ÍÀÌ´Ù.
-	/// ¿ì¸®´Â MYINDEX ±¸Á¶Ã¼¿¡¼­ WORDÇüÀ¸·Î ¼±¾ğÇßÀ¸¹Ç·Î D3DFMT_INDEX16À» »ç¿ëÇÑ´Ù.
+    /// ì¸ë±ìŠ¤ë²„í¼ ìƒì„±
+	/// D3DFMT_INDEX16ì€ ì¸ë±ìŠ¤ì˜ ë‹¨ìœ„ê°€ 16ë¹„íŠ¸ ë¼ëŠ” ê²ƒì´ë‹¤.
+	/// ìš°ë¦¬ëŠ” MYINDEX êµ¬ì¡°ì²´ì—ì„œ WORDí˜•ìœ¼ë¡œ ì„ ì–¸í–ˆìœ¼ë¯€ë¡œ D3DFMT_INDEX16ì„ ì‚¬ìš©í•œë‹¤.
     if( FAILED( g_pd3dDevice->CreateIndexBuffer( 12 * sizeof(MYINDEX), 0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &g_pIB, NULL ) ) )
     {
         return E_FAIL;
     }
 
-    /// ÀÎµ¦½º¹öÆÛ¸¦ °ªÀ¸·Î Ã¤¿î´Ù. 
-    /// ÀÎµ¦½º¹öÆÛÀÇ Lock()ÇÔ¼ö¸¦ È£ÃâÇÏ¿© Æ÷ÀÎÅÍ¸¦ ¾ò¾î¿Â´Ù.
+    /// ì¸ë±ìŠ¤ë²„í¼ë¥¼ ê°’ìœ¼ë¡œ ì±„ìš´ë‹¤. 
+    /// ì¸ë±ìŠ¤ë²„í¼ì˜ Lock()í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì—¬ í¬ì¸í„°ë¥¼ ì–»ì–´ì˜¨ë‹¤.
     VOID* pIndices;
-    if( FAILED( g_pIB->Lock( 0, sizeof(indices), (void**)&pIndices, 0 ) ) )
-        return E_FAIL;
+	if ( FAILED( g_pIB->Lock( 0, sizeof( indices ), (void**)&pIndices, 0 ) ) )
+	{
+		return E_FAIL;
+	}
     memcpy( pIndices, indices, sizeof(indices) );
     g_pIB->Unlock();
 
@@ -172,28 +175,34 @@ HRESULT InitIB()
 
 void InitAnimation()
 {
-	g_aniPos[0] = D3DXVECTOR3( 0, 0, 0 );	/// À§Ä¡ Å°(0,0,0)
-	g_aniPos[1] = D3DXVECTOR3( 5, 5, 5 );	/// À§Ä¡ Å°(5,5,5)
+	g_aniPos[0] = D3DXVECTOR3( 0, 0, 0 );	/// ìœ„ì¹˜ í‚¤(0,0,0)
+	g_aniPos[1] = D3DXVECTOR3( 5, 5, 5 );	/// ìœ„ì¹˜ í‚¤(5,5,5)
 
-    FLOAT Yaw	= D3DX_PI * 90.0f / 180.0f;		/// YÃà 90µµ È¸Àü
+    FLOAT Yaw	= D3DX_PI * 90.0f / 180.0f;		/// Yì¶• 90ë„ íšŒì „
     FLOAT Pitch	= 0;
     FLOAT Roll	= 0;
-	D3DXQuaternionRotationYawPitchRoll( &g_aniRot[0], Yaw, Pitch, Roll );	/// »ç¿ø¼ö Å°(YÃà90µµ)
+	D3DXQuaternionRotationYawPitchRoll( &g_aniRot[0], Yaw, Pitch, Roll );	/// ì‚¬ì›ìˆ˜ í‚¤(Yì¶•90ë„)
 
     Yaw	= 0;
-    Pitch	= D3DX_PI * 90.0f / 180.0f;			/// XÃà 90µµ È¸Àü
+    Pitch	= D3DX_PI * 90.0f / 180.0f;			/// Xì¶• 90ë„ íšŒì „
     Roll	= 0;
-	D3DXQuaternionRotationYawPitchRoll( &g_aniRot[1], Yaw, Pitch, Roll );	/// »ç¿ø¼ö Å°(XÃà90µµ)
+	D3DXQuaternionRotationYawPitchRoll( &g_aniRot[1], Yaw, Pitch, Roll );	/// ì‚¬ì›ìˆ˜ í‚¤(Xì¶•90ë„)
 }
 
 /**-----------------------------------------------------------------------------
- * ±âÇÏÁ¤º¸ ÃÊ±âÈ­
+ * ê¸°í•˜ì •ë³´ ì´ˆê¸°í™”
  *------------------------------------------------------------------------------
  */
 HRESULT InitGeometry()
 {
-	if( FAILED( InitVB() ) ) return E_FAIL;
-	if( FAILED( InitIB() ) ) return E_FAIL;
+	if ( FAILED( InitVB() ) )
+	{
+		return E_FAIL;
+	}
+	if ( FAILED( InitIB() ) )
+	{
+		return E_FAIL;
+	}
 
 	InitAnimation();
 
@@ -202,17 +211,17 @@ HRESULT InitGeometry()
 
 
 /**-----------------------------------------------------------------------------
- * Ä«¸Ş¶ó Çà·Ä ¼³Á¤
+ * ì¹´ë©”ë¼ í–‰ë ¬ ì„¤ì •
  *------------------------------------------------------------------------------
  */
 void SetupCamera()
 {
-	/// ¿ùµåÇà·Ä ¼³Á¤
+	/// ì›”ë“œí–‰ë ¬ ì„¤ì •
     D3DXMATRIXA16 matWorld;
 	D3DXMatrixIdentity( &matWorld );
     g_pd3dDevice->SetTransform( D3DTS_WORLD, &matWorld );
 
-    /// ºäÇà·ÄÀ» ¼³Á¤
+    /// ë·°í–‰ë ¬ì„ ì„¤ì •
     D3DXVECTOR3 vEyePt( 0.0f, 10.0f,-20.0f );
     D3DXVECTOR3 vLookatPt( 0.0f, 0.0f, 0.0f );
     D3DXVECTOR3 vUpVec( 0.0f, 1.0f, 0.0f );
@@ -220,22 +229,22 @@ void SetupCamera()
     D3DXMatrixLookAtLH( &matView, &vEyePt, &vLookatPt, &vUpVec );
     g_pd3dDevice->SetTransform( D3DTS_VIEW, &matView );
 
-    /// ÇÁ·ÎÁ§¼Ç Çà·Ä ¼³Á¤
+    /// í”„ë¡œì ì…˜ í–‰ë ¬ ì„¤ì •
     D3DXMATRIXA16 matProj;
     D3DXMatrixPerspectiveFovLH( &matProj, D3DX_PI/4, 1.0f, 1.0f, 100.0f );
     g_pd3dDevice->SetTransform( D3DTS_PROJECTION, &matProj );
 }
 
-/// ¼±Çüº¸°£(Linear Interpolation) ÇÔ¼ö
+/// ì„ í˜•ë³´ê°„(Linear Interpolation) í•¨ìˆ˜
 float Linear( float v0, float v1, float t )
 {
 	return v0 * ( 1.0f - t ) + v1 * t;
-// ´ÙÀ½ ÁÙ·Î ¹Ù²ãµµ µÈ´Ù.
+// ë‹¤ìŒ ì¤„ë¡œ ë°”ê¿”ë„ ëœë‹¤.
 //	return v0 + t * ( v1 - v0 );
 }
 
 /**-----------------------------------------------------------------------------
- * ¾Ö´Ï¸ŞÀÌ¼Ç Çà·Ä»ı¼º
+ * ì• ë‹ˆë©”ì´ì…˜ í–‰ë ¬ìƒì„±
  *------------------------------------------------------------------------------
  */
 VOID Animate()
@@ -244,54 +253,64 @@ VOID Animate()
 	float x, y, z;
 	D3DXQUATERNION quat;
 
-	if( t > 1.0f ) t = 0.0f;
+	if ( t > 1.0f )
+	{
+		t = 0.0f;
+	}
 
-	/// À§Ä¡°ªÀÇ ¼±Çüº¸°£
+	/// ìœ„ì¹˜ê°’ì˜ ì„ í˜•ë³´ê°„
 	x = Linear(g_aniPos[0].x, g_aniPos[1].x, t );
 	y = Linear(g_aniPos[0].y, g_aniPos[1].y, t );
 	z = Linear(g_aniPos[0].z, g_aniPos[1].z, t );
-	D3DXMatrixTranslation( &g_matTMParent, x, y, z );	/// ÀÌµ¿Çà·ÄÀ» ±¸ÇÑ´Ù.
+	D3DXMatrixTranslation( &g_matTMParent, x, y, z );	/// ì´ë™í–‰ë ¬ì„ êµ¬í•œë‹¤.
 
-//	À§ÀÇ 4ÁÙÀº ´ÙÀ½ÀÇ 3ÁÙ·Î ¹Ù²Ü¼ö ÀÖ´Ù.
+//	ìœ„ì˜ 4ì¤„ì€ ë‹¤ìŒì˜ 3ì¤„ë¡œ ë°”ê¿€ìˆ˜ ìˆë‹¤.
+//	D3DXVec3Lerp = ë²¡í„° 2ê°œì˜ ì„ í˜•ë³´ê°„ í•¨ìˆ˜
+
 //	D3DXVECTOR3 v;
 //	D3DXVec3Lerp( &v, &g_aniPos[0], &g_aniPos[1], t );
 //	D3DXMatrixTranslation( &g_matTMParent, v.x, v.y, v.z );
 
-	/// È¸Àü°ªÀÇ ±¸¸é¼±Çüº¸°£
+	/// íšŒì „ê°’ì˜ êµ¬ë©´ì„ í˜•ë³´ê°„
 	D3DXQuaternionSlerp( &quat, &g_aniRot[0], &g_aniRot[1], t );
-	D3DXMatrixRotationQuaternion( &g_matRParent, &quat );	/// »ç¿ø¼ö¸¦ È¸ÀüÇà·Ä°ªÀ¸·Î º¯È¯
+	D3DXMatrixRotationQuaternion( &g_matRParent, &quat );	/// ì‚¬ì›ìˆ˜ë¥¼ íšŒì „í–‰ë ¬ê°’ìœ¼ë¡œ ë³€í™˜
 	t += 0.005f;
 
-	/// ÀÚ½Ä¸Ş½ÃÀÇ ZÃà È¸ÀüÇà·Ä
+	/// ìì‹ë©”ì‹œì˜ Zì¶• íšŒì „í–‰ë ¬
     D3DXMatrixRotationZ( &g_matRChild, GetTickCount()/500.0f );
-	/// ÀÚ½Ä¸Ş½Ã´Â ¿øÁ¡À¸·ÎºÎÅÍ (3,3,3)°Å¸®¿¡ ÀÖÀ½
+	/// ìì‹ë©”ì‹œëŠ” ì›ì ìœ¼ë¡œë¶€í„° (3,3,3)ê±°ë¦¬ì— ìˆìŒ
 	D3DXMatrixTranslation( &g_matTMChild, 3, 3, 3 );
 }
 
 
 
 /**-----------------------------------------------------------------------------
- * ÃÊ±âÈ­ °´Ã¼µé ¼Ò°Å
+ * ì´ˆê¸°í™” ê°ì²´ë“¤ ì†Œê±°
  *------------------------------------------------------------------------------
  */
 VOID Cleanup()
 {
-    if( g_pIB != NULL )        
-        g_pIB->Release();
-
-    if( g_pVB != NULL )        
-        g_pVB->Release();
-
-    if( g_pd3dDevice != NULL ) 
-        g_pd3dDevice->Release();
-
-    if( g_pD3D != NULL )       
-        g_pD3D->Release();
+	if ( g_pIB != NULL )
+	{
+		g_pIB->Release();
+	}
+	if ( g_pVB != NULL )
+	{
+		g_pVB->Release();
+	}
+	if ( g_pd3dDevice != NULL )
+	{
+		g_pd3dDevice->Release();
+	}
+	if ( g_pD3D != NULL )
+	{
+		g_pD3D->Release();
+	}
 }
 
 
 /**-----------------------------------------------------------------------------
- * ¸Ş½Ã ±×¸®±â
+ * ë©”ì‹œ ê·¸ë¦¬ê¸°
  *------------------------------------------------------------------------------
  */
 void DrawMesh( D3DXMATRIXA16* pMat )
@@ -304,34 +323,34 @@ void DrawMesh( D3DXMATRIXA16* pMat )
 }
 
 /**-----------------------------------------------------------------------------
- * È­¸é ±×¸®±â
+ * í™”ë©´ ê·¸ë¦¬ê¸°
  *------------------------------------------------------------------------------
  */
 VOID Render()
 {
 	D3DXMATRIXA16	matWorld;
 
-    /// ÈÄ¸é¹öÆÛ¿Í Z¹öÆÛ ÃÊ±âÈ­
+    /// í›„ë©´ë²„í¼ì™€ Zë²„í¼ ì´ˆê¸°í™”
     g_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,0,255), 1.0f, 0 );
 
-	/// ¾Ö´Ï¸ŞÀÌ¼Ç Çà·Ä¼³Á¤
+	/// ì• ë‹ˆë©”ì´ì…˜ í–‰ë ¬ì„¤ì •
 	Animate();
-    /// ·»´õ¸µ ½ÃÀÛ
+    /// ë Œë”ë§ ì‹œì‘
     if( SUCCEEDED( g_pd3dDevice->BeginScene() ) )
     {
 		matWorld = g_matRParent * g_matTMParent;
-		DrawMesh( &matWorld );		/// ºÎ¸ğ »óÀÚ ±×¸®±â
+		DrawMesh( &matWorld );		/// ë¶€ëª¨ ìƒì ê·¸ë¦¬ê¸°
 
 		matWorld = g_matRChild * g_matTMChild * matWorld;
-//		¹Ù·ÎÀ§ÀÇ Çà°ú °°Àº °á°ú
+//		ë°”ë¡œìœ„ì˜ í–‰ê³¼ ê°™ì€ ê²°ê³¼
 //		matWorld = g_matRChild * g_matTMChild * g_matRParent * g_matTMParent;
-		DrawMesh( &matWorld );		/// ÀÚ½Ä »óÀÚ ±×¸®±â
+		DrawMesh( &matWorld );		/// ìì‹ ìƒì ê·¸ë¦¬ê¸°
 
-        /// ·»´õ¸µ Á¾·á
+        /// ë Œë”ë§ ì¢…ë£Œ
         g_pd3dDevice->EndScene();
     }
 
-    /// ÈÄ¸é¹öÆÛ¸¦ º¸ÀÌ´Â È­¸éÀ¸·Î!
+    /// í›„ë©´ë²„í¼ë¥¼ ë³´ì´ëŠ” í™”ë©´ìœ¼ë¡œ!
     g_pd3dDevice->Present( NULL, NULL, NULL, NULL );
 }
 
@@ -339,7 +358,7 @@ VOID Render()
 
 
 /**-----------------------------------------------------------------------------
- * À©µµ¿ì ÇÁ·Î½ÃÁ®
+ * ìœˆë„ìš° í”„ë¡œì‹œì ¸
  *------------------------------------------------------------------------------
  */
 
@@ -366,53 +385,53 @@ LRESULT WINAPI MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
 
 /**-----------------------------------------------------------------------------
- * ÇÁ·Î±×·¥ ½ÃÀÛÁ¡
+ * í”„ë¡œê·¸ë¨ ì‹œì‘ì 
  *------------------------------------------------------------------------------
  */
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT )
 {
-    /// À©µµ¿ì Å¬·¡½º µî·Ï
+    /// ìœˆë„ìš° í´ë˜ìŠ¤ ë“±ë¡
     WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, MsgProc, 0L, 0L,
                       GetModuleHandle(NULL), NULL, NULL, NULL, NULL,
                       "BasicFrame", NULL };
     RegisterClassEx( &wc );
 
-    /// À©µµ¿ì »ı¼º
+    /// ìœˆë„ìš° ìƒì„±
     HWND hWnd = CreateWindow( "BasicFrame", "Keyframe Animation",
                               WS_OVERLAPPEDWINDOW, 100, 100, 500, 500,
                               GetDesktopWindow(), NULL, wc.hInstance, NULL );
 
-    /// Direct3D ÃÊ±âÈ­
+    /// Direct3D ì´ˆê¸°í™”
     if( SUCCEEDED( InitD3D( hWnd ) ) )
     {
         if( SUCCEEDED( InitGeometry() ) )
         {
-			/// Ä«¸Ş¶ó Çà·Ä¼³Á¤
+			/// ì¹´ë©”ë¼ í–‰ë ¬ì„¤ì •
 			SetupCamera();
 
-        	/// À©µµ¿ì Ãâ·Â
+        	/// ìœˆë„ìš° ì¶œë ¥
 			ShowWindow( hWnd, SW_SHOWDEFAULT );
 			UpdateWindow( hWnd );
 
-        	/// ¸Ş½ÃÁö ·çÇÁ
+        	/// ë©”ì‹œì§€ ë£¨í”„
 			MSG msg;
 			ZeroMemory( &msg, sizeof(msg) );
 			while( msg.message!=WM_QUIT )
 			{
-            	/// ¸Ş½ÃÁöÅ¥¿¡ ¸Ş½ÃÁö°¡ ÀÖÀ¸¸é ¸Ş½ÃÁö Ã³¸®
+            	/// ë©”ì‹œì§€íì— ë©”ì‹œì§€ê°€ ìˆìœ¼ë©´ ë©”ì‹œì§€ ì²˜ë¦¬
 				if( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
 				{
 					TranslateMessage( &msg );
 					DispatchMessage( &msg );
 				}
 				else
-				/// Ã³¸®ÇÒ ¸Ş½ÃÁö°¡ ¾øÀ¸¸é Render()ÇÔ¼ö È£Ãâ
+				/// ì²˜ë¦¬í•  ë©”ì‹œì§€ê°€ ì—†ìœ¼ë©´ Render()í•¨ìˆ˜ í˜¸ì¶œ
 					Render();
 			}
 		}
     }
 
-	/// µî·ÏµÈ Å¬·¡½º ¼Ò°Å
+	/// ë“±ë¡ëœ í´ë˜ìŠ¤ ì†Œê±°
     UnregisterClass( "D3D Tutorial", wc.hInstance );
     return 0;
 }
