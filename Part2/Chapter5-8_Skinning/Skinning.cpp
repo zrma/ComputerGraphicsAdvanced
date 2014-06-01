@@ -24,6 +24,7 @@ LPDIRECT3DTEXTURE9      g_pTexture   = NULL; /// 텍스처
 
 D3DXMATRIXA16			g_mat0;	/// 0번 행렬
 D3DXMATRIXA16			g_mat1;	/// 1번 행렬
+D3DXMATRIXA16			g_mat2;	/// 1번 행렬
 
 /// 사용자 정점을 정의할 구조체
 struct CUSTOMVERTEX
@@ -53,9 +54,10 @@ struct MYINDEX
 HRESULT InitD3D( HWND hWnd )
 {
     /// 디바이스를 생성하기위한 D3D객체 생성
-    if( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
-        return E_FAIL;
-
+	if ( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
+	{
+		return E_FAIL;
+	}
     /// 디바이스를 생성할 구조체
     /// 복잡한 오브젝트를 그릴것이기때문에, 이번에는 Z버퍼가 필요하다.
     D3DPRESENT_PARAMETERS d3dpp;
@@ -67,12 +69,11 @@ HRESULT InitD3D( HWND hWnd )
     d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
 
     /// 디바이스 생성
-    if( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
-                                      D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-                                      &d3dpp, &g_pd3dDevice ) ) )
-    {
-        return E_FAIL;
-    }
+	if ( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
+		D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &g_pd3dDevice ) ) )
+	{
+		return E_FAIL;
+	}
 
     /// 컬링기능을 끈다.
     g_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
@@ -102,19 +103,20 @@ HRESULT InitD3D( HWND hWnd )
 HRESULT InitVB()
 {
     /// 정점버퍼 생성
-    if( FAILED( g_pd3dDevice->CreateVertexBuffer( 50*2*sizeof(CUSTOMVERTEX),
-                                                  0, D3DFVF_CUSTOMVERTEX,
-                                                  D3DPOOL_DEFAULT, &g_pVB, NULL ) ) )
-    {
-        return E_FAIL;
-    }
+	if ( FAILED( g_pd3dDevice->CreateVertexBuffer( 50 * 2 * sizeof( CUSTOMVERTEX ),
+		0, D3DFVF_CUSTOMVERTEX, D3DPOOL_DEFAULT, &g_pVB, NULL ) ) )
+	{
+		return E_FAIL;
+	}
 
     CUSTOMVERTEX* pVertices;
-    if( FAILED( g_pVB->Lock( 0, 0, (void**)&pVertices, 0 ) ) )
-        return E_FAIL;
-    for( DWORD i=0; i<50; i++ )
+	if ( FAILED( g_pVB->Lock( 0, 0, (void**)&pVertices, 0 ) ) )
+	{
+		return E_FAIL;
+	}
+    for( DWORD i = 0 ; i < 50 ; ++i )
     {
-        FLOAT theta = (2*D3DX_PI*i)/(50-1);
+		FLOAT theta = ( 2 * D3DX_PI*i ) / ( 50 - 1 );
 
         pVertices[2*i+0].position	= D3DXVECTOR3( sinf(theta),-1.0f, cosf(theta) );
         pVertices[2*i+0].b[0]		= 1.0f;
@@ -129,7 +131,7 @@ HRESULT InitVB()
         pVertices[2*i+1].b[0]		= 0.5f;
         pVertices[2*i+1].b[1]		= 0.5f;
         pVertices[2*i+1].b[2]		= 0.0f;
-        pVertices[2*i+1].index		= 0x0001;			/// 0번 가중치는 1번 행렬의 영향을 0.5만큼 받음
+        pVertices[2*i+1].index		= 0x0201;			/// 0번 가중치는 1번 행렬의 영향을 0.5만큼 받음
         pVertices[2*i+1].color    = 0xff808080;			
         pVertices[2*i+1].tu       = ((FLOAT)i)/(50-1);
         pVertices[2*i+1].tv       = 0.0f;
@@ -157,8 +159,14 @@ HRESULT InitIB()
  */
 HRESULT InitGeometry()
 {
-	if( FAILED( InitVB() ) ) return E_FAIL;
-	if( FAILED( InitIB() ) ) return E_FAIL;
+	if ( FAILED( InitVB() ) )
+	{
+		return E_FAIL;
+	}
+	if ( FAILED( InitIB() ) )
+	{
+		return E_FAIL;
+	}
 
     if( FAILED( D3DXCreateTextureFromFile( g_pd3dDevice, "lake.bmp", &g_pTexture ) ) )
     {
@@ -207,6 +215,7 @@ VOID Animate()
 	DWORD d = GetTickCount() % ( (int)((D3DX_PI*2) * 1000) );
 	/// Y축 회전행렬
     D3DXMatrixRotationY( &g_mat1, d / 1000.0f );
+	D3DXMatrixRotationX( &g_mat2, d / 1000.0f );
 }
 
 
@@ -217,20 +226,26 @@ VOID Animate()
  */
 VOID Cleanup()
 {
-    if( g_pTexture != NULL )        
-        g_pTexture->Release();
-
-    if( g_pIB != NULL )        
-        g_pIB->Release();
-
-    if( g_pVB != NULL )        
-        g_pVB->Release();
-
-    if( g_pd3dDevice != NULL ) 
-        g_pd3dDevice->Release();
-
-    if( g_pD3D != NULL )       
-        g_pD3D->Release();
+	if ( g_pTexture != NULL )
+	{
+		g_pTexture->Release();
+	}
+	if ( g_pIB != NULL )
+	{
+		g_pIB->Release();
+	}
+	if ( g_pVB != NULL )
+	{
+		g_pVB->Release();
+	}
+	if ( g_pd3dDevice != NULL )
+	{
+		g_pd3dDevice->Release();
+	}
+	if ( g_pD3D != NULL )
+	{
+		g_pD3D->Release();
+	}
 }
 
 
@@ -266,6 +281,8 @@ VOID Render()
 		g_pd3dDevice->SetTransform( D3DTS_WORLDMATRIX(0), &g_mat0 );
 		/// 1번 매트릭스 팔레트에 회전행렬
 		g_pd3dDevice->SetTransform( D3DTS_WORLDMATRIX(1), &g_mat1 );
+		g_pd3dDevice->SetTransform( D3DTS_WORLDMATRIX(2), &g_mat2 );
+
         g_pd3dDevice->SetTexture( 0, g_pTexture );
         g_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE );
         g_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
