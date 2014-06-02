@@ -1,4 +1,4 @@
-#ifndef _ZTERRAIN_H_
+ï»¿#ifndef _ZTERRAIN_H_
 #define _ZTERRAIN_H_
 
 #include "define.h"
@@ -6,80 +6,80 @@
 #define MAX_TERRAIN_TEX	4
 
 /**
- * @brief ÁöÇü°ü¸® Å¬·¡½º
+ * @brief ì§€í˜•ê´€ë¦¬ í´ë˜ìŠ¤
  * 
  */
 class ZTerrain
 {
 private:
-	int						m_cxDIB;		/// DIBÀÇ °¡·ÎÇÈ¼¿¼ö
-	int						m_czDIB;		/// DIBÀÇ ¼¼·ÎÇÈ¼¿¼ö
-	int						m_cyDIB;		/// DIBÀÇ ÃÖ´ë³ôÀÌ°ª(Áï 0 ~ 255»çÀÌÀÇ °ª)
+	int						m_cxDIB;		/// DIBì˜ ê°€ë¡œí”½ì…€ìˆ˜
+	int						m_czDIB;		/// DIBì˜ ì„¸ë¡œí”½ì…€ìˆ˜
+	int						m_cyDIB;		/// DIBì˜ ìµœëŒ€ë†’ì´ê°’(ì¦‰ 0 ~ 255ì‚¬ì´ì˜ ê°’)
 	D3DXVECTOR3				m_vfScale;		/// x scale, y scale, z scale
-	TERRAINVERTEX*			m_pvHeightMap;	/// ³ôÀÌ¸ÊÀÇ Á¤Á¡¹è¿­
-	LPDIRECT3DDEVICE9		m_pd3dDevice;	/// Ãâ·Â¿ë D3Dµğ¹ÙÀÌ½º
-	LPDIRECT3DTEXTURE9		m_pTex[MAX_TERRAIN_TEX];	/// ÅØ½ºÃ³
-	LPDIRECT3DVERTEXBUFFER9	m_pVB;			/// ÁöÇüÃâ·Â¿ë Á¤Á¡¹öÆÛ
-	LPDIRECT3DINDEXBUFFER9	m_pIB;			/// ÁöÇüÃâ·Â¿ë ÀÎµ¦½º¹öÆÛ
-	int						m_nTriangles;	/// Ãâ·ÂÇÒ »ï°¢ÇüÀÇ °³¼ö
-	ZQuadTree*				m_pQuadTree;	/// ÄõµåÆ®¸® °´Ã¼ÀÇ Æ÷ÀÎÅÍ
+	TERRAINVERTEX*			m_pvHeightMap;	/// ë†’ì´ë§µì˜ ì •ì ë°°ì—´
+	LPDIRECT3DDEVICE9		m_pd3dDevice;	/// ì¶œë ¥ìš© D3Dë””ë°”ì´ìŠ¤
+	LPDIRECT3DTEXTURE9		m_pTex[MAX_TERRAIN_TEX];	/// í…ìŠ¤ì²˜
+	LPDIRECT3DVERTEXBUFFER9	m_pVB;			/// ì§€í˜•ì¶œë ¥ìš© ì •ì ë²„í¼
+	LPDIRECT3DINDEXBUFFER9	m_pIB;			/// ì§€í˜•ì¶œë ¥ìš© ì¸ë±ìŠ¤ë²„í¼
+	int						m_nTriangles;	/// ì¶œë ¥í•  ì‚¼ê°í˜•ì˜ ê°œìˆ˜
+	ZQuadTree*				m_pQuadTree;	/// ì¿¼ë“œíŠ¸ë¦¬ ê°ì²´ì˜ í¬ì¸í„°
 
 public:
-	// »ı¼º°ú °ü·ÃµÈ ÇÔ¼öµé
+	// ìƒì„±ê³¼ ê´€ë ¨ëœ í•¨ìˆ˜ë“¤
 				ZTerrain();
 				~ZTerrain();
 	/**
-	 * @brief ÁöÇü°´Ã¼¸¦ ÃÊ±âÈ­ÇÑ´Ù.
-	 * @param pDev : Ãâ·Â¿ë D3Dµğ¹ÙÀÌ½º 
-	 * @param pvfScale : ³ôÀÌ¸ÊÀÇ x,y,z°ª¿¡ °öÇÒ Ã´µµ°ª(scale vector)
-	 * @param fLODRatio : LODÃ³¸®½Ã¿¡ »ç¿ëµÉ °ª
-	 * @param lpBMPFilename : ³ôÀÌ¸Ê¿ë BMPÆÄÀÏ¸í
-	 * @param lpTexFilename : Ãâ·Â¿ë D3Dµğ¹ÙÀÌ½º 
+	 * @brief ì§€í˜•ê°ì²´ë¥¼ ì´ˆê¸°í™”í•œë‹¤.
+	 * @param pDev : ì¶œë ¥ìš© D3Dë””ë°”ì´ìŠ¤ 
+	 * @param pvfScale : ë†’ì´ë§µì˜ x,y,zê°’ì— ê³±í•  ì²™ë„ê°’(scale vector)
+	 * @param fLODRatio : LODì²˜ë¦¬ì‹œì— ì‚¬ìš©ë  ê°’
+	 * @param lpBMPFilename : ë†’ì´ë§µìš© BMPíŒŒì¼ëª…
+	 * @param lpTexFilename : ì¶œë ¥ìš© D3Dë””ë°”ì´ìŠ¤ 
 	 */
 	HRESULT		Create( LPDIRECT3DDEVICE9 pDev, D3DXVECTOR3* pvfScale, LPSTR lpBMPFilename, LPSTR lpTexFilename[MAX_TERRAIN_TEX] );
 
-	// ZTerrain³»ºÎ¿¡¼­ »ç¿ëµÇ´Â ÇÔ¼öµé
+	// ZTerrainë‚´ë¶€ì—ì„œ ì‚¬ìš©ë˜ëŠ” í•¨ìˆ˜ë“¤
 private:
-	/// ÁöÇü°´Ã¼¸¦ ¸Ş¸ğ¸®¿¡¼­ ¼Ò°ÅÇÑ´Ù.
+	/// ì§€í˜•ê°ì²´ë¥¼ ë©”ëª¨ë¦¬ì—ì„œ ì†Œê±°í•œë‹¤.
 	HRESULT		_Destroy();
 
-	/// ÁöÇü°´Ã¼¿¡¼­ »ç¿ëÇÒ ÅØ½ºÃ³¸¦ ÀĞ¾îµéÀÎ´Ù.
+	/// ì§€í˜•ê°ì²´ì—ì„œ ì‚¬ìš©í•  í…ìŠ¤ì²˜ë¥¼ ì½ì–´ë“¤ì¸ë‹¤.
 	HRESULT		_LoadTextures( LPSTR lpTexFilename[MAX_TERRAIN_TEX] );
 
-	/// BMPÆÄÀÏÀ» ¿­¾î¼­ ³ôÀÌ¸ÊÀ» »ı¼ºÇÑ´Ù.
+	/// BMPíŒŒì¼ì„ ì—´ì–´ì„œ ë†’ì´ë§µì„ ìƒì„±í•œë‹¤.
 	HRESULT		_BuildHeightMap( LPSTR lpFilename );
 
-	/// BMPÆÄÀÏÀÇ Å©±â¿¡ ¸ÂÃç¼­ ÄõµåÆ®¸®¸¦ »ı¼ºÇÑ´Ù.
+	/// BMPíŒŒì¼ì˜ í¬ê¸°ì— ë§ì¶°ì„œ ì¿¼ë“œíŠ¸ë¦¬ë¥¼ ìƒì„±í•œë‹¤.
 	HRESULT		_BuildQuadTree();
 
-	/// Á¤Á¡, ÀÎµ¦½º ¹öÆÛ¸¦ »ı¼ºÇÑ´Ù.
+	/// ì •ì , ì¸ë±ìŠ¤ ë²„í¼ë¥¼ ìƒì„±í•œë‹¤.
 	HRESULT		_CreateVIB();
 
-	/// È­¸é¿¡ ÁöÇüÀ» Ãâ·ÂÇÑ´Ù.
+	/// í™”ë©´ì— ì§€í˜•ì„ ì¶œë ¥í•œë‹¤.
 	HRESULT		_Render();
 public:
-	/// x, zÀ§Ä¡ÀÇ Á¤Á¡°ªÀ» ¾ò¾î³½´Ù.
+	/// x, zìœ„ì¹˜ì˜ ì •ì ê°’ì„ ì–»ì–´ë‚¸ë‹¤.
 	TERRAINVERTEX*	GetVertex( int x, int z ) { return (m_pvHeightMap+x+z*m_cxDIB); }
 
-	/// x, zÀ§Ä¡ÀÇ ³ôÀÌ(y)°ª¸¸ ¾ò¾î³»´Ù.
+	/// x, zìœ„ì¹˜ì˜ ë†’ì´(y)ê°’ë§Œ ì–»ì–´ë‚´ë‹¤.
 	float		GetHeight( int x, int z ) { return (GetVertex( x, z ))->p.y; }
 
-	/// ³ôÀÌ¸Ê BMPÆÄÀÏÀÇ °¡·ÎÇÈ¼¿¼ö
+	/// ë†’ì´ë§µ BMPíŒŒì¼ì˜ ê°€ë¡œí”½ì…€ìˆ˜
 	int			GetCXDIB() { return m_cxDIB; }
 
-	/// ³ôÀÌ¸Ê BMPÆÄÀÏÀÇ °¡·ÎÇÈ¼¿¼ö
+	/// ë†’ì´ë§µ BMPíŒŒì¼ì˜ ê°€ë¡œí”½ì…€ìˆ˜
 	int			GetCZDIB() { return m_czDIB; }
 
-	/// ³ôÀÌ¸ÊÀÇ ½ÇÁ¦ xÃà Æø(column)°ª
+	/// ë†’ì´ë§µì˜ ì‹¤ì œ xì¶• í­(column)ê°’
 	float		GetCXTerrain() { return m_cxDIB * m_vfScale.x; }
 
-	/// ³ôÀÌ¸ÊÀÇ ½ÇÁ¦ yÃà ³ôÀÌ(height)°ª
+	/// ë†’ì´ë§µì˜ ì‹¤ì œ yì¶• ë†’ì´(height)ê°’
 	float		GetCYTerrain() { return m_cyDIB * m_vfScale.y; }
 
-	/// ³ôÀÌ¸ÊÀÇ ½ÇÁ¦ zÃà ±æÀÌ(row)°ª
+	/// ë†’ì´ë§µì˜ ì‹¤ì œ zì¶• ê¸¸ì´(row)ê°’
 	float		GetCZTerrain() { return m_czDIB * m_vfScale.z; }
 
-	/// È­¸é¿¡ ÁöÇüÀ» Ãâ·ÂÇÑ´Ù.
+	/// í™”ë©´ì— ì§€í˜•ì„ ì¶œë ¥í•œë‹¤.
 	HRESULT		Draw( ZFrustum* pFrustum );
 };
 

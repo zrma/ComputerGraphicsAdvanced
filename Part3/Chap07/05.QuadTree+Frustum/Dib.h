@@ -1,5 +1,5 @@
-// DIB.H
-// Made by ±èÅÂÇü(gapacci@hotmail.com)
+ï»¿// DIB.H
+// Made by ê¹€íƒœí˜•(gapacci@hotmail.com)
 //
 
 #ifndef _DIB_H_

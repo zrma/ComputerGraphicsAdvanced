@@ -1,4 +1,4 @@
-// DIB module
+ï»¿// DIB module
 
 #include <windows.h>
 #include <stdio.h>
@@ -102,7 +102,7 @@ LPBYTE	DibCreateEmpty( int nBitsPerPixel, int nWidth, int nHeight )
 	return lpDib;
 }
 
-// WIN 16 ¹öÁ¯ ¶óÀÌºê·¯¸®µé°úÀÇ È£È¯À¸·Î ÁØºñ.
+// WIN 16 ë²„ì ¼ ë¼ì´ë¸ŒëŸ¬ë¦¬ë“¤ê³¼ì˜ í˜¸í™˜ìœ¼ë¡œ ì¤€ë¹„.
 LPBYTE DibCreateEmptyHandle( int nBitsPerPixel, int nWidth, int nHeight )
 {
 	LPBITMAPINFOHEADER	lpBMIH;
@@ -656,7 +656,7 @@ bool	DibPrint( HWND hwnd, LPBYTE lpDib, LPSTR lpszDevice, int nDevide )
 				}
 			}
 
-			// Àç´Ü¼± ±×¸®±â
+			// ì¬ë‹¨ì„  ê·¸ë¦¬ê¸°
 			HPEN	hOldPen;
 			hOldPen = (HPEN)SelectObject( PrinterDC, GetStockObject( BLACK_PEN ) );
 			for ( x = 0; x <= n; x++ )
