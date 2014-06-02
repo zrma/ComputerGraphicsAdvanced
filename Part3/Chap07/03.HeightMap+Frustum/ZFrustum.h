@@ -1,45 +1,45 @@
-#ifndef _ZFRUSTUM_H_
+ï»¿#ifndef _ZFRUSTUM_H_
 #define _ZFRUSTUM_H_
 
 #include <d3d9.h>
 #include <d3dx9.h>
 
-/// ÇÁ·¯½ºÅÒ¿¡ Á¤È®ÇÏ°Ô Æ÷ÇÔµÇÁö ¾Ê´õ¶óµµ, ¾à°£ÀÇ ¿©ºÐÀ» ÁÖ¾î¼­ ÇÁ·¯½ºÅÒ¿¡ Æ÷ÇÔ½ÃÅ°±â À§ÇÑ °ª
+/// í”„ëŸ¬ìŠ¤í…€ì— ì •í™•í•˜ê²Œ í¬í•¨ë˜ì§€ ì•Šë”ë¼ë„, ì•½ê°„ì˜ ì—¬ë¶„ì„ ì£¼ì–´ì„œ í”„ëŸ¬ìŠ¤í…€ì— í¬í•¨ì‹œí‚¤ê¸° ìœ„í•œ ê°’
 #define PLANE_EPSILON	5.0f
 
 /**
- * ÇÁ·¯½ºÅÒ ÄÃ¸µÀ» ÇÏ±âÀ§ÇÑ Å¬·¡½º
+ * í”„ëŸ¬ìŠ¤í…€ ì»¬ë§ì„ í•˜ê¸°ìœ„í•œ í´ëž˜ìŠ¤
  *
  */
 class ZFrustum
 {
-	D3DXVECTOR3	m_vtx[8];	/// ÇÁ·¯½ºÅÒÀ» ±¸¼ºÇÒ Á¤Á¡ 8°³
-	D3DXVECTOR3	m_vPos;		/// ÇöÀç Ä«¸Þ¶óÀÇ ¿ùµåÁÂÇ¥
-	D3DXPLANE	m_plane[6];	/// ÇÁ·¯½ºÅÒÀ» ±¸¼ºÇÏ´Â 6°³ÀÇ Æò¸é
+	D3DXVECTOR3	m_vtx[8];	/// í”„ëŸ¬ìŠ¤í…€ì„ êµ¬ì„±í•  ì •ì  8ê°œ
+	D3DXVECTOR3	m_vPos;		/// í˜„ìž¬ ì¹´ë©”ë¼ì˜ ì›”ë“œì¢Œí‘œ
+	D3DXPLANE	m_plane[6];	/// í”„ëŸ¬ìŠ¤í…€ì„ êµ¬ì„±í•˜ëŠ” 6ê°œì˜ í‰ë©´
 
 public:
-	/// »ý¼ºÀÚ
+	/// ìƒì„±ìž
 	ZFrustum();
 	
-	/// Ä«¸Þ¶ó(view) * ÇÁ·ÎÁ§¼Ç(projection)Çà·ÄÀ» ÀÔ·Â¹Þ¾Æ 6°³ÀÇ Æò¸éÀ» ¸¸µç´Ù.
+	/// ì¹´ë©”ë¼(view) * í”„ë¡œì ì…˜(projection)í–‰ë ¬ì„ ìž…ë ¥ë°›ì•„ 6ê°œì˜ í‰ë©´ì„ ë§Œë“ ë‹¤.
 	BOOL	Make( D3DXMATRIXA16* pmatViewProj );
 
-	/// ÇÑÁ¡ v°¡ ÇÁ·¯½ºÅÒ¾È¿¡ ÀÖÀ¸¸é TRUE¸¦ ¹ÝÈ¯, ¾Æ´Ï¸é FALSE¸¦ ¹ÝÈ¯ÇÑ´Ù.
+	/// í•œì  vê°€ í”„ëŸ¬ìŠ¤í…€ì•ˆì— ìžˆìœ¼ë©´ TRUEë¥¼ ë°˜í™˜, ì•„ë‹ˆë©´ FALSEë¥¼ ë°˜í™˜í•œë‹¤.
 	BOOL	IsIn( D3DXVECTOR3* pv );
 
-	/** Áß½É(v)¿Í ¹ÝÁö¸§(radius)¸¦ °®´Â °æ°è±¸(bounding sphere)°¡ ÇÁ·¯½ºÅÒ¾È¿¡ ÀÖÀ¸¸é
-	 *  TRUE¸¦ ¹ÝÈ¯, ¾Æ´Ï¸é FALSE¸¦ ¹ÝÈ¯ÇÑ´Ù.
+	/** ì¤‘ì‹¬(v)ì™€ ë°˜ì§€ë¦„(radius)ë¥¼ ê°–ëŠ” ê²½ê³„êµ¬(bounding sphere)ê°€ í”„ëŸ¬ìŠ¤í…€ì•ˆì— ìžˆìœ¼ë©´
+	 *  TRUEë¥¼ ë°˜í™˜, ì•„ë‹ˆë©´ FALSEë¥¼ ë°˜í™˜í•œë‹¤.
 	 */
 	BOOL	IsInSphere( D3DXVECTOR3* pv, float radius );
 
-	/// ÇÁ·¯½ºÅÒÀ» È­¸é¿¡ ±×·ÁÁØ´Ù.
+	/// í”„ëŸ¬ìŠ¤í…€ì„ í™”ë©´ì— ê·¸ë ¤ì¤€ë‹¤.
 	BOOL	Draw( LPDIRECT3DDEVICE9 pDev );
 
-	/// ÇöÀç Ä«¸Þ¶óÀÇ ¿ùµåÁÂÇ¥¸¦ ¾ò¾îÁØ´Ù.
+	/// í˜„ìž¬ ì¹´ë©”ë¼ì˜ ì›”ë“œì¢Œí‘œë¥¼ ì–»ì–´ì¤€ë‹¤.
 	D3DXVECTOR3*	GetPos() { return &m_vPos; }
 };
 
-/// Æò¸éÀÇ ¹æÁ¤½ÄÀ» Á÷Á¢±¸ÇÏ´Â ÇÔ¼ö, ÇöÀç´Â »ç¿ëµÇ°í ÀÖÁö ¾Ê´Ù.
+/// í‰ë©´ì˜ ë°©ì •ì‹ì„ ì§ì ‘êµ¬í•˜ëŠ” í•¨ìˆ˜, í˜„ìž¬ëŠ” ì‚¬ìš©ë˜ê³  ìžˆì§€ ì•Šë‹¤.
 void ZMakePlane( D3DXPLANE* pPlane, D3DXVECTOR3* pv0, D3DXVECTOR3* pv1, D3DXVECTOR3* pv2 );
 
 #endif // _ZFRUSTUM_H_

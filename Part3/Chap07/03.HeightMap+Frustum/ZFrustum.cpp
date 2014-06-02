@@ -34,8 +34,10 @@ BOOL ZFrustum::Make( D3DXMATRIXA16* pmatViewProj )
 	// 역행렬( Matrix_view * Matrix_Proj )^-1를 양변에 곱하면
 	// Vertex_최종 * 역행렬( Matrix_view * Matrix_Proj )^-1 = Vertex_World 가 된다.
 	// 그러므로, m_vtx * matInv = Vertex_world가 되어, 월드좌표계의 프러스텀 좌표를 얻을 수 있다.
-	for( i = 0; i < 8; i++ )
+	for ( i = 0; i < 8; i++ )
+	{
 		D3DXVec3TransformCoord( &m_vtx[i], &m_vtx[i], &matInv );
+	}
 
 	// 0번과 5번은 프러스텀중 near평면의 좌측상단과 우측하단이므로, 둘의 좌표를 더해서 2로 나누면
 	// 카메라의 좌표를 얻을 수 있다.(정확히 일치하는 것은 아니다.)
@@ -63,11 +65,20 @@ BOOL ZFrustum::IsIn( D3DXVECTOR3* pv )
 //	for( i = 0 ; i < 6 ; i++ )
 	{
 		fDist = D3DXPlaneDotCoord( &m_plane[3], pv );
-		if( fDist > PLANE_EPSILON ) return FALSE;	// plane의 normal벡터가 far로 향하고 있으므로 양수이면 프러스텀의 바깥쪽
+		if ( fDist > PLANE_EPSILON )
+		{
+			return FALSE;	// plane의 normal벡터가 far로 향하고 있으므로 양수이면 프러스텀의 바깥쪽
+		}
 		fDist = D3DXPlaneDotCoord( &m_plane[4], pv );
-		if( fDist > PLANE_EPSILON ) return FALSE;	// plane의 normal벡터가 left로 향하고 있으므로 양수이면 프러스텀의 왼쪽
+		if ( fDist > PLANE_EPSILON )
+		{
+			return FALSE;	// plane의 normal벡터가 left로 향하고 있으므로 양수이면 프러스텀의 왼쪽
+		}
 		fDist = D3DXPlaneDotCoord( &m_plane[5], pv );
-		if( fDist > PLANE_EPSILON ) return FALSE;	// plane의 normal벡터가 right로 향하고 있으므로 양수이면 프러스텀의 오른쪽
+		if ( fDist > PLANE_EPSILON )
+		{
+			return FALSE;	// plane의 normal벡터가 right로 향하고 있으므로 양수이면 프러스텀의 오른쪽
+		}
 	}
 
 	return TRUE;
@@ -81,11 +92,20 @@ BOOL ZFrustum::IsInSphere( D3DXVECTOR3* pv, float radius )
 	float		fDist;
 
 	fDist = D3DXPlaneDotCoord( &m_plane[3], pv );
-	if( fDist > (radius+PLANE_EPSILON) ) return FALSE;	// 평면과 중심점의 거리가 반지름보다 크면 프러스텀에 없음
+	if ( fDist > ( radius + PLANE_EPSILON ) )
+	{
+		return FALSE;	// 평면과 중심점의 거리가 반지름보다 크면 프러스텀에 없음
+	}
 	fDist = D3DXPlaneDotCoord( &m_plane[4], pv );
-	if( fDist > (radius+PLANE_EPSILON) ) return FALSE;	// 평면과 중심점의 거리가 반지름보다 크면 프러스텀에 없음
+	if ( fDist > ( radius + PLANE_EPSILON ) )
+	{
+		return FALSE;	// 평면과 중심점의 거리가 반지름보다 크면 프러스텀에 없음
+	}
 	fDist = D3DXPlaneDotCoord( &m_plane[5], pv );
-	if( fDist > (radius+PLANE_EPSILON) ) return FALSE;	// 평면과 중심점의 거리가 반지름보다 크면 프러스텀에 없음
+	if ( fDist > ( radius + PLANE_EPSILON ) )
+	{
+		return FALSE;	// 평면과 중심점의 거리가 반지름보다 크면 프러스텀에 없음
+	}
 
 	return TRUE;
 }
@@ -116,8 +136,10 @@ BOOL ZFrustum::Draw( LPDIRECT3DDEVICE9 pDev )
 
 	VTX		vtx[8];
 
-	for( int i = 0 ; i < 8 ; i++ )
+	for ( int i = 0; i < 8; i++ )
+	{
 		vtx[i].p = m_vtx[i];
+	}
 
 	pDev->SetFVF( D3DFVF_XYZ );
 	pDev->SetStreamSource( 0, NULL, 0, sizeof(VTX) );
