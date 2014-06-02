@@ -1,4 +1,4 @@
-#ifndef _DEFINE_H_
+﻿#ifndef _DEFINE_H_
 #define _DEFINE_H_
 
 #include <d3d9.h>

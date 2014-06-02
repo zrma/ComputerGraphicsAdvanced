@@ -1,6 +1,6 @@
-#include "GlobalFunc.h"
+ï»¿#include "GlobalFunc.h"
 
-// 2¸¦ ¹ØÀ¸·Î ÇÏ´Â ¼ıÀÚ nÀÇ ·Î±×°ªÀ» ±¸ÇÑ´Ù.
+// 2ë¥¼ ë°‘ìœ¼ë¡œ í•˜ëŠ” ìˆ«ì nì˜ ë¡œê·¸ê°’ì„ êµ¬í•œë‹¤.
 int	Log2( int n )
 {
 	for( int i = 1 ; i < 64 ; i++ )
@@ -12,7 +12,7 @@ int	Log2( int n )
 	return 1;
 }
 
-// 2^n°ªÀ» ±¸ÇÑ´Ù
+// 2^nê°’ì„ êµ¬í•œë‹¤
 int	Pow2( int n )
 {
 	int val = 1;
@@ -20,7 +20,7 @@ int	Pow2( int n )
 	return val;
 }
 
-// pt°¡ rc¾È¿¡ Æ÷ÇÔµÇ´ÂÁö °Ë»çÇÑ´Ù.(PtInRect()¶ó´Â APIÇÔ¼ö´Â À½¼ö(-)°ª Ã³¸®¸¦ ¸øÇß´Ù.)
+// ptê°€ rcì•ˆì— í¬í•¨ë˜ëŠ”ì§€ ê²€ì‚¬í•œë‹¤.(PtInRect()ë¼ëŠ” APIí•¨ìˆ˜ëŠ” ìŒìˆ˜(-)ê°’ ì²˜ë¦¬ë¥¼ ëª»í–ˆë‹¤.)
 BOOL IsInRect( RECT* rc, POINT pt )
 {
 	if( ( rc->left <= pt.x ) && ( pt.x <= rc->right ) &&
