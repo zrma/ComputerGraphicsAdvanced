@@ -361,6 +361,10 @@ VOID Animate()
  */
 VOID Cleanup()
 {
+	if ( g_pTexNormal != NULL )
+	{
+		g_pTexNormal->Release();
+	}
 	if ( g_pTexHeight != NULL )
 	{
 		g_pTexHeight->Release();
