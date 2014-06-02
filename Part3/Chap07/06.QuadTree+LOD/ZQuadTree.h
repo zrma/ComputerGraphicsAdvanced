@@ -1,4 +1,4 @@
-#ifndef _ZQUADTREE_H_
+ï»¿#ifndef _ZQUADTREE_H_
 #define _ZQUADTREE_H_
 
 #include "define.h"
@@ -6,88 +6,88 @@
 #include "ZFLog.h"
 
 /**
- * @brief QuadTreeÀÇ º£ÀÌ½º Å¬·¡½º
+ * @brief QuadTreeì˜ ë² ì´ìŠ¤ í´ë˜ìŠ¤
  *
  */ 
 class ZQuadTree
 {
-	/// ÄõµåÆ®¸®¿¡ º¸°üµÇ´Â 4°³ÀÇ ÄÚ³Ê°ª¿¡ ´ëÇÑ »ó¼ö°ª
+	/// ì¿¼ë“œíŠ¸ë¦¬ì— ë³´ê´€ë˜ëŠ” 4ê°œì˜ ì½”ë„ˆê°’ì— ëŒ€í•œ ìƒìˆ˜ê°’
 	enum			CornerType { CORNER_TL, CORNER_TR, CORNER_BL, CORNER_BR };
 
-	/// ÄõµåÆ®¸®¿Í ÇÁ·¯½ºÅÒ°£ÀÇ °ü°è
-	enum			QuadLocation { FRUSTUM_OUT = 0,				/// ÇÁ·¯½ºÅÒ¿¡¼­ ¿ÏÀü¹ş¾î³²
-								   FRUSTUM_PARTIALLY_IN = 1,	/// ÇÁ·¯½ºÅÒ¿¡ ºÎºĞÆ÷ÇÔ
-								   FRUSTUM_COMPLETELY_IN = 2,	/// ÇÁ·¯½ºÅÒ¿¡ ¿ÏÀüÆ÷ÇÔ
-								   FRUSTUM_UNKNOWN = -1 };		/// ¸ğ¸£°ÚÀ½(^^;)
+	/// ì¿¼ë“œíŠ¸ë¦¬ì™€ í”„ëŸ¬ìŠ¤í…€ê°„ì˜ ê´€ê³„
+	enum			QuadLocation { FRUSTUM_OUT = 0,				/// í”„ëŸ¬ìŠ¤í…€ì—ì„œ ì™„ì „ë²—ì–´ë‚¨
+								   FRUSTUM_PARTIALLY_IN = 1,	/// í”„ëŸ¬ìŠ¤í…€ì— ë¶€ë¶„í¬í•¨
+								   FRUSTUM_COMPLETELY_IN = 2,	/// í”„ëŸ¬ìŠ¤í…€ì— ì™„ì „í¬í•¨
+								   FRUSTUM_UNKNOWN = -1 };		/// ëª¨ë¥´ê² ìŒ(^^;)
 
 private:
-	ZQuadTree*	m_pChild[4];		/// QuadTreeÀÇ 4°³ÀÇ ÀÚ½Ä³ëµå
+	ZQuadTree*	m_pChild[4];		/// QuadTreeì˜ 4ê°œì˜ ìì‹ë…¸ë“œ
 
-	int			m_nCenter;			/// QuadTree¿¡ º¸°üÇÒ Ã¹¹øÂ° °ª
-	int			m_nCorner[4];		/// QuadTree¿¡ º¸°üÇÒ µÎ¹øÂ° °ª
+	int			m_nCenter;			/// QuadTreeì— ë³´ê´€í•  ì²«ë²ˆì§¸ ê°’
+	int			m_nCorner[4];		/// QuadTreeì— ë³´ê´€í•  ë‘ë²ˆì§¸ ê°’
 									///    TopLeft(TL)      TopRight(TR)
 									///              0------1
 									///              |      |
 									///              |      |
 									///              2------3
 									/// BottomLeft(BL)      BottomRight(BR)
-	BOOL		m_bCulled;			/// ÇÁ·¯½ºÅÒ¿¡¼­ ÄÃ¸µµÈ ³ëµåÀÎ°¡?
-	float		m_fRadius;			/// ³ëµå¸¦ °¨½Î´Â °æ°è±¸(bounding sphere)ÀÇ ¹İÁö¸§
+	BOOL		m_bCulled;			/// í”„ëŸ¬ìŠ¤í…€ì—ì„œ ì»¬ë§ëœ ë…¸ë“œì¸ê°€?
+	float		m_fRadius;			/// ë…¸ë“œë¥¼ ê°ì‹¸ëŠ” ê²½ê³„êµ¬(bounding sphere)ì˜ ë°˜ì§€ë¦„
 private:
-	/// ÀÚ½Ä ³ëµå¸¦ Ãß°¡ÇÑ´Ù.
+	/// ìì‹ ë…¸ë“œë¥¼ ì¶”ê°€í•œë‹¤.
 	ZQuadTree*	_AddChild( int nCornerTL, int nCornerTR, int nCornerBL, int nCornerBR );
 
-	/// 4°³ÀÇ ÄÚ³Ê°ªÀ» ¼ÂÆÃÇÑ´Ù.
+	/// 4ê°œì˜ ì½”ë„ˆê°’ì„ ì…‹íŒ…í•œë‹¤.
 	BOOL		_SetCorners( int nCornerTL, int nCornerTR, int nCornerBL, int nCornerBR );
 
-	/// Quadtree¸¦ 4°³ÀÇ ÇÏÀ§ Æ®¸®·Î ºÎºĞºĞÇÒ(subdivide)ÇÑ´Ù.
-	BOOL		_SubDivide();		// Quadtree¸¦ subdivideÇÑ´Ù.
+	/// Quadtreeë¥¼ 4ê°œì˜ í•˜ìœ„ íŠ¸ë¦¬ë¡œ ë¶€ë¶„ë¶„í• (subdivide)í•œë‹¤.
+	BOOL		_SubDivide();		// Quadtreeë¥¼ subdivideí•œë‹¤.
 
-	/// Ãâ·ÂÇÒ Æú¸®°ïÀÇ ÀÎµ¦½º¸¦ »ı¼ºÇÑ´Ù.
+	/// ì¶œë ¥í•  í´ë¦¬ê³¤ì˜ ì¸ë±ìŠ¤ë¥¼ ìƒì„±í•œë‹¤.
 	int			_GenTriIndex( int nTris, LPVOID pIndex, TERRAINVERTEX* pHeightMap, ZFrustum* pFrustum, float fLODRatio );
 
-	/// ¸Ş¸ğ¸®¿¡¼­ ÄõµåÆ®¸®¸¦ »èÁ¦ÇÑ´Ù.
+	/// ë©”ëª¨ë¦¬ì—ì„œ ì¿¼ë“œíŠ¸ë¦¬ë¥¼ ì‚­ì œí•œë‹¤.
 	void		_Destroy();
 
-	/// µÎÁ¡ »çÀÌÀÇ °Å¸®¸¦ ±¸ÇÑ´Ù.
+	/// ë‘ì  ì‚¬ì´ì˜ ê±°ë¦¬ë¥¼ êµ¬í•œë‹¤.
 	float		_GetDistance( D3DXVECTOR3* pv1, D3DXVECTOR3* pv2 ) 
 				{
 					return D3DXVec3Length( &(*pv2 - *pv1) );
 				}
 
-	/// Ä«¸Ş¶ó¿Í ÇöÀç ³ëµå¿ÍÀÇ °Å¸®°ªÀ» ±âÁØÀ¸·Î LOD°ªÀ» ±¸ÇÑ´Ù.
+	/// ì¹´ë©”ë¼ì™€ í˜„ì¬ ë…¸ë“œì™€ì˜ ê±°ë¦¬ê°’ì„ ê¸°ì¤€ìœ¼ë¡œ LODê°’ì„ êµ¬í•œë‹¤.
 	int			_GetLODLevel( TERRAINVERTEX* pHeightMap, D3DXVECTOR3* pCamera, float fLODRatio )
 				{
 					float d = _GetDistance( (D3DXVECTOR3*)(pHeightMap+m_nCenter), pCamera );
 					return max( (int)( d * fLODRatio ), 1 );
 				}
 
-	/// ÇöÀç ³ëµå°¡ LODµî±ŞÀ¸·Î º¼¶§  Ãâ·ÂÀÌ °¡´ÉÇÑ ³ëµåÀÎ°¡?
+	/// í˜„ì¬ ë…¸ë“œê°€ LODë“±ê¸‰ìœ¼ë¡œ ë³¼ë•Œ  ì¶œë ¥ì´ ê°€ëŠ¥í•œ ë…¸ë“œì¸ê°€?
 	BOOL		_IsVisible( TERRAINVERTEX* pHeightMap, D3DXVECTOR3* pCamera, float fLODRatio )
 				{ 
 					return ( (m_nCorner[CORNER_TR] - m_nCorner[CORNER_TL]) <= _GetLODLevel( pHeightMap, pCamera, fLODRatio ) ); 
 				}
 
-	/// ÇöÀç³ëµå°¡ ÇÁ·¯½ºÅÒ¿¡ Æ÷ÇÔµÇ´Â°¡?
+	/// í˜„ì¬ë…¸ë“œê°€ í”„ëŸ¬ìŠ¤í…€ì— í¬í•¨ë˜ëŠ”ê°€?
 	int			_IsInFrustum( TERRAINVERTEX* pHeightMap, ZFrustum* pFrustum );
 
-	/// _IsInFrustum()ÇÔ¼öÀÇ °á°ú¿¡ µû¶ó ÇÁ·¯½ºÅÒ ÄÃ¸µ ¼öÇà
+	/// _IsInFrustum()í•¨ìˆ˜ì˜ ê²°ê³¼ì— ë”°ë¼ í”„ëŸ¬ìŠ¤í…€ ì»¬ë§ ìˆ˜í–‰
 	void		_FrustumCull( TERRAINVERTEX* pHeightMap, ZFrustum* pFrustum );
 public:
 
-				/// ÃÖÃÊ ·çÆ®³ëµå »ı¼ºÀÚ
+				/// ìµœì´ˆ ë£¨íŠ¸ë…¸ë“œ ìƒì„±ì
 				ZQuadTree( int cx, int cy );
 
-				/// ÇÏÀ§ ÀÚ½Ä³ëµå »ı¼ºÀÚ
+				/// í•˜ìœ„ ìì‹ë…¸ë“œ ìƒì„±ì
 				ZQuadTree( ZQuadTree* pParent );
 
-				/// ¼Ò¸êÀÚ
+				/// ì†Œë©¸ì
 				~ZQuadTree();
 
-	/// QuadTree¸¦ ±¸ÃàÇÑ´Ù.
-	BOOL		Build( TERRAINVERTEX* pHeightMap );	// ÇöÀçÀÇ Á¤º¸¸¦ ±âÁØÀ¸·Î QuadTree¸¦ buildÇÑ´Ù.
+	/// QuadTreeë¥¼ êµ¬ì¶•í•œë‹¤.
+	BOOL		Build( TERRAINVERTEX* pHeightMap );	// í˜„ì¬ì˜ ì •ë³´ë¥¼ ê¸°ì¤€ìœ¼ë¡œ QuadTreeë¥¼ buildí•œë‹¤.
 
-	///	»ï°¢ÇüÀÇ ÀÎµ¦½º¸¦ ¸¸µé°í, Ãâ·ÂÇÒ »ï°¢ÇüÀÇ °³¼ö¸¦ ¹İÈ¯ÇÑ´Ù.
+	///	ì‚¼ê°í˜•ì˜ ì¸ë±ìŠ¤ë¥¼ ë§Œë“¤ê³ , ì¶œë ¥í•  ì‚¼ê°í˜•ì˜ ê°œìˆ˜ë¥¼ ë°˜í™˜í•œë‹¤.
 	int			GenerateIndex( LPVOID pIndex, TERRAINVERTEX* pHeightMap, ZFrustum* pFrustum, float fLODRatio );
 };
 

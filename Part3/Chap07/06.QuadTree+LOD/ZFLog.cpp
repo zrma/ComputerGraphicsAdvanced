@@ -1,4 +1,4 @@
-#include "ZFLog.h"
+ï»¿#include "ZFLog.h"
 #include <time.h>
 
 
@@ -65,13 +65,13 @@ int ZFLog::Log( LPSTR fmt, ... )
 	_strtime( time );
 	vsprintf( buff, fmt, (char *)(&fmt+1) );
 
-	// Console¿¡ Ãâ·ÂÇÒ °æ¿ì 
+	// Consoleì— ì¶œë ¥í•  ê²½ìš° 
 	if( m_nTarget & ZF_LOG_TARGET_CONSOLE )
 	{
 		printf( "(date[%s] time[%s]) : %s\n", date, time, buff );
 	}
 
-	// Log File¿¡ Ãâ·ÂÇÒ °æ¿ì
+	// Log Fileì— ì¶œë ¥í•  ê²½ìš°
 	if( m_nTarget & ZF_LOG_TARGET_FILE )
 	{
 		FILE*	fp = NULL;
@@ -83,7 +83,7 @@ int ZFLog::Log( LPSTR fmt, ... )
 		}
 	}
 
-	// Log Window¿¡ Ãâ·ÂÇÒ °æ¿ì 
+	// Log Windowì— ì¶œë ¥í•  ê²½ìš° 
 	if( m_nTarget & ZF_LOG_TARGET_WINDOW )
 	{
 		SendMessage( m_hwndList, LB_ADDSTRING, 0, (LPARAM) buff );

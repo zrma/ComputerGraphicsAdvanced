@@ -1,8 +1,8 @@
-#include "ZFLog.h"
+ï»¿#include "ZFLog.h"
 #include "ZTerrain.h"
 #include "dib.h"
 
-/// »ı¼ºÀÚ
+/// ìƒì„±ì
 ZTerrain::ZTerrain()
 {
 	m_cxDIB			= 0;
@@ -18,19 +18,19 @@ ZTerrain::ZTerrain()
 	m_pQuadTree		= NULL;
 }
 
-/// ¼Ò¸êÀÚ
+/// ì†Œë©¸ì
 ZTerrain::~ZTerrain()
 {
 	_Destroy();
 }
 
 /**
- * @brief ÁöÇü°´Ã¼¸¦ ÃÊ±âÈ­ÇÑ´Ù.
- * @param pDev : Ãâ·Â¿ë D3Dµğ¹ÙÀÌ½º 
- * @param pvfScale : ³ôÀÌ¸ÊÀÇ x,y,z°ª¿¡ °öÇÒ Ã´µµ°ª(scale vector)
- * @param fLODRatio : LODÃ³¸®½Ã¿¡ »ç¿ëµÉ °ª
- * @param lpBMPFilename : ³ôÀÌ¸Ê¿ë BMPÆÄÀÏ¸í
- * @param lpTexFilename : Ãâ·Â¿ë D3Dµğ¹ÙÀÌ½º 
+ * @brief ì§€í˜•ê°ì²´ë¥¼ ì´ˆê¸°í™”í•œë‹¤.
+ * @param pDev : ì¶œë ¥ìš© D3Dë””ë°”ì´ìŠ¤ 
+ * @param pvfScale : ë†’ì´ë§µì˜ x,y,zê°’ì— ê³±í•  ì²™ë„ê°’(scale vector)
+ * @param fLODRatio : LODì²˜ë¦¬ì‹œì— ì‚¬ìš©ë  ê°’
+ * @param lpBMPFilename : ë†’ì´ë§µìš© BMPíŒŒì¼ëª…
+ * @param lpTexFilename : ì¶œë ¥ìš© D3Dë””ë°”ì´ìŠ¤ 
  */
 HRESULT	ZTerrain::Create( LPDIRECT3DDEVICE9 pDev, D3DXVECTOR3* pvfScale, float fLODRatio, LPSTR lpBMPFilename, LPSTR lpTEXFilename[4] )
 {
@@ -46,7 +46,7 @@ HRESULT	ZTerrain::Create( LPDIRECT3DDEVICE9 pDev, D3DXVECTOR3* pvfScale, float f
 	return S_OK;
 }
 
-/// ÁöÇü°´Ã¼¸¦ ¸Ş¸ğ¸®¿¡¼­ ¼Ò°ÅÇÑ´Ù.
+/// ì§€í˜•ê°ì²´ë¥¼ ë©”ëª¨ë¦¬ì—ì„œ ì†Œê±°í•œë‹¤.
 HRESULT	ZTerrain::_Destroy()
 {
 	DEL( m_pQuadTree );
@@ -58,7 +58,7 @@ HRESULT	ZTerrain::_Destroy()
 	return S_OK;
 }
 
-/// ÁöÇü°´Ã¼¿¡¼­ »ç¿ëÇÒ ÅØ½ºÃ³¸¦ ÀĞ¾îµéÀÎ´Ù.
+/// ì§€í˜•ê°ì²´ì—ì„œ ì‚¬ìš©í•  í…ìŠ¤ì²˜ë¥¼ ì½ì–´ë“¤ì¸ë‹¤.
 HRESULT	ZTerrain::_LoadTextures( LPSTR lpTexFilename[4] )
 {
 	for( int i = 0 ; i < 4 ; i++ )
@@ -67,7 +67,7 @@ HRESULT	ZTerrain::_LoadTextures( LPSTR lpTexFilename[4] )
 	return S_OK;
 }
 
-/// BMPÆÄÀÏÀ» ¿­¾î¼­ ³ôÀÌ¸ÊÀ» »ı¼ºÇÑ´Ù.
+/// BMPíŒŒì¼ì„ ì—´ì–´ì„œ ë†’ì´ë§µì„ ìƒì„±í•œë‹¤.
 HRESULT	ZTerrain::_BuildHeightMap( LPSTR lpFilename )
 {
 	LPBYTE	pDIB = DibLoadHandle( lpFilename );
@@ -76,7 +76,7 @@ HRESULT	ZTerrain::_BuildHeightMap( LPSTR lpFilename )
 	m_cxDIB = DIB_CX( pDIB );
 	m_czDIB = DIB_CY( pDIB );
 	
-	// ¿©±â¼­ m_cxDIB³ª m_czDIB°¡ (2^n+1)ÀÌ ¾Æ´Ñ°æ¿ì E_FAILÀ» ¹İÈ¯ÇÏµµ·Ï ¼öÁ¤ÇÒ °Í
+	// ì—¬ê¸°ì„œ m_cxDIBë‚˜ m_czDIBê°€ (2^n+1)ì´ ì•„ë‹Œê²½ìš° E_FAILì„ ë°˜í™˜í•˜ë„ë¡ ìˆ˜ì •í•  ê²ƒ
 
 	m_pvHeightMap = new TERRAINVERTEX[m_cxDIB * m_czDIB];
 
@@ -99,17 +99,17 @@ HRESULT	ZTerrain::_BuildHeightMap( LPSTR lpFilename )
 	return S_OK;
 }
 
-/// BMPÆÄÀÏÀÇ Å©±â¿¡ ¸ÂÃç¼­ ÄõµåÆ®¸®¸¦ »ı¼ºÇÑ´Ù.
+/// BMPíŒŒì¼ì˜ í¬ê¸°ì— ë§ì¶°ì„œ ì¿¼ë“œíŠ¸ë¦¬ë¥¼ ìƒì„±í•œë‹¤.
 HRESULT	ZTerrain::_BuildQuadTree()
 {
 	m_pQuadTree->Build( m_pvHeightMap );
 	return S_OK;
 }
 
-/// Á¤Á¡, ÀÎµ¦½º ¹öÆÛ¸¦ »ı¼ºÇÑ´Ù.
+/// ì •ì , ì¸ë±ìŠ¤ ë²„í¼ë¥¼ ìƒì„±í•œë‹¤.
 HRESULT	ZTerrain::_CreateVIB()
 {
-	// VB»ı¼º
+	// VBìƒì„±
 	if( FAILED( m_pd3dDevice->CreateVertexBuffer( m_cxDIB*m_czDIB*sizeof(TERRAINVERTEX),
 												  0, TERRAINVERTEX::FVF, D3DPOOL_DEFAULT, &m_pVB, NULL ) ) )
     {
@@ -126,7 +126,7 @@ HRESULT	ZTerrain::_CreateVIB()
 	m_pVB->Unlock();
 
 #ifdef _USE_INDEX16
-	// IB»ı¼º
+	// IBìƒì„±
     if( FAILED( m_pd3dDevice->CreateIndexBuffer( (m_cxDIB-1)*(m_czDIB-1)*2 * sizeof(TRIINDEX), 0, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &m_pIB, NULL ) ) )
     {
         _Destroy();
@@ -134,7 +134,7 @@ HRESULT	ZTerrain::_CreateVIB()
     }
 	g_pLog->Log( "Using 16bit index buffer..." );
 #else
-	// IB»ı¼º
+	// IBìƒì„±
     if( FAILED( m_pd3dDevice->CreateIndexBuffer( (m_cxDIB-1)*(m_czDIB-1)*2 * sizeof(TRIINDEX), 0, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &m_pIB, NULL ) ) )
     {
         _Destroy();
@@ -145,12 +145,12 @@ HRESULT	ZTerrain::_CreateVIB()
     return S_OK;
 }
 
-/// È­¸é¿¡ ÁöÇüÀ» Ãâ·ÂÇÑ´Ù.
+/// í™”ë©´ì— ì§€í˜•ì„ ì¶œë ¥í•œë‹¤.
 HRESULT	ZTerrain::_Render()
 {
-	m_pd3dDevice->SetTexture( 0, m_pTex[0] );								// 0¹ø ÅØ½ºÃÄ ½ºÅ×ÀÌÁö¿¡ ÅØ½ºÃÄ °íÁ¤(»ö±ò¸Ê)
-	m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );	// 0¹ø ÅØ½ºÃ³ ½ºÅ×ÀÌÁöÀÇ È®´ë ÇÊÅÍ
-	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0 );		// 0¹ø ÅØ½ºÃ³ : 0¹ø ÅØ½ºÃ³ ÀÎµ¦½º »ç¿ë
+	m_pd3dDevice->SetTexture( 0, m_pTex[0] );								// 0ë²ˆ í…ìŠ¤ì³ ìŠ¤í…Œì´ì§€ì— í…ìŠ¤ì³ ê³ ì •(ìƒ‰ê¹”ë§µ)
+	m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );	// 0ë²ˆ í…ìŠ¤ì²˜ ìŠ¤í…Œì´ì§€ì˜ í™•ëŒ€ í•„í„°
+	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0 );		// 0ë²ˆ í…ìŠ¤ì²˜ : 0ë²ˆ í…ìŠ¤ì²˜ ì¸ë±ìŠ¤ ì‚¬ìš©
 
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLOROP,   D3DTOP_MODULATE);
 	m_pd3dDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
@@ -163,7 +163,7 @@ HRESULT	ZTerrain::_Render()
 	return S_OK;
 }
 
-/// È­¸é¿¡ ÁöÇüÀ» Ãâ·ÂÇÑ´Ù.
+/// í™”ë©´ì— ì§€í˜•ì„ ì¶œë ¥í•œë‹¤.
 HRESULT	ZTerrain::Draw( ZFrustum* pFrustum )
 {
 	LPDWORD		pI;
