@@ -63,8 +63,10 @@ struct MYINDEX
 HRESULT InitD3D( HWND hWnd )
 {
     /// 디바이스를 생성하기위한 D3D객체 생성
-    if( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
-        return E_FAIL;
+	if ( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
+	{
+		return E_FAIL;
+	}
 
     /// 디바이스를 생성할 구조체
     /// 복잡한 오브젝트를 그릴것이기때문에, 이번에는 Z버퍼가 필요하다.
@@ -102,17 +104,18 @@ HRESULT InitTexture()
 {
 	/// 높이맵 텍스처
 	/// D3DFMT_X8R8G8B8와 D3DPOOL_MANAGED를 주기위해서 이 함수를 사용했다.
-	if( FAILED( D3DXCreateTextureFromFileEx( g_pd3dDevice, BMP_HEIGHTMAP, 
-								 D3DX_DEFAULT, D3DX_DEFAULT, 
-								 D3DX_DEFAULT, 0, 
-								 D3DFMT_X8R8G8B8, D3DPOOL_MANAGED, 
-								 D3DX_DEFAULT, D3DX_DEFAULT, 0, 
-								 NULL, NULL, &g_pTexHeight) ) )
+	if ( FAILED( D3DXCreateTextureFromFileEx( g_pd3dDevice, BMP_HEIGHTMAP,
+		D3DX_DEFAULT, D3DX_DEFAULT, D3DX_DEFAULT, 0, D3DFMT_X8R8G8B8, D3DPOOL_MANAGED,
+		D3DX_DEFAULT, D3DX_DEFAULT, 0, NULL, NULL, &g_pTexHeight ) ) )
+	{
 		return E_FAIL;
+	}
 
 	/// 색깔맵
-	if( FAILED( D3DXCreateTextureFromFile( g_pd3dDevice, "tile2.tga", &g_pTexDiffuse) ) )
+	if ( FAILED( D3DXCreateTextureFromFile( g_pd3dDevice, "tile2.tga", &g_pTexDiffuse ) ) )
+	{
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -141,8 +144,10 @@ HRESULT InitVB()
 	g_pTexHeight->LockRect( 0, &d3drc, NULL, D3DLOCK_READONLY );
     VOID* pVertices;
 	/// 정점버퍼 락!
-    if( FAILED( g_pVB->Lock( 0, g_cxHeight*g_czHeight*sizeof(CUSTOMVERTEX), (void**)&pVertices, 0 ) ) )
-        return E_FAIL;
+	if ( FAILED( g_pVB->Lock( 0, g_cxHeight*g_czHeight*sizeof( CUSTOMVERTEX ), (void**)&pVertices, 0 ) ) )
+	{
+		return E_FAIL;
+	}
 
 	CUSTOMVERTEX	v;
 	CUSTOMVERTEX*	pV = (CUSTOMVERTEX*)pVertices;
@@ -186,17 +191,17 @@ HRESULT InitIB()
     if( FAILED( g_pIB->Lock( 0, (g_cxHeight-1)*(g_czHeight-1)*2 * sizeof(MYINDEX), (void**)&pI, 0 ) ) )
         return E_FAIL;
 
-	for( DWORD z = 0 ; z < g_czHeight-1 ; z++ )
+	for ( DWORD z = 0; z < g_czHeight - 1; z++ )
 	{
-		for( DWORD x = 0 ; x < g_cxHeight-1 ; x++ )
+		for ( DWORD x = 0; x < g_cxHeight - 1; x++ )
 		{
-			i._0 = (z*g_cxHeight+x);
-			i._1 = (z*g_cxHeight+x+1);
-			i._2 = ((z+1)*g_cxHeight+x);
+			i._0 = static_cast<WORD>( z*g_cxHeight + x );
+			i._1 = static_cast<WORD>( z*g_cxHeight + x + 1 );
+			i._2 = static_cast<WORD>( ( z + 1 )*g_cxHeight + x );
 			*pI++ = i;
-			i._0 = ((z+1)*g_cxHeight+x);
-			i._1 = (z*g_cxHeight+x+1);
-			i._2 = ((z+1)*g_cxHeight+x+1);
+			i._0 = static_cast<WORD>( ( z + 1 )*g_cxHeight + x );
+			i._1 = static_cast<WORD>( z*g_cxHeight + x + 1 );
+			i._2 = static_cast<WORD>( ( z + 1 )*g_cxHeight + x + 1 );
 			*pI++ = i;
 		}
 	}
@@ -277,10 +282,18 @@ VOID SetupLights()
  */
 HRESULT InitGeometry()
 {
-	if( FAILED( InitTexture() ) ) return E_FAIL;
-	if( FAILED( InitVB() ) ) return E_FAIL;
-	if( FAILED( InitIB() ) ) return E_FAIL;
-
+	if ( FAILED( InitTexture() ) )
+	{
+		return E_FAIL;
+	}
+	if ( FAILED( InitVB() ) )
+	{
+		return E_FAIL;
+	}
+	if ( FAILED( InitIB() ) )
+	{
+		return E_FAIL;
+	}
 	SetupCamera();
 
 	// 최초의 마우스 위치 보관
@@ -296,25 +309,26 @@ HRESULT InitGeometry()
  * FPS(Frame Per Second)출력
  *------------------------------------------------------------------------------
  */
-void LogFPS(void)
+void LogFPS( void )
 {
 	static DWORD	nTick = 0;
 	static DWORD	nFPS = 0;
 
 	/// 1초가 지났는가?
-	if( GetTickCount() - nTick > 1000 )
+	if ( GetTickCount() - nTick > 1000 )
 	{
 		nTick = GetTickCount();
 		/// FPS값 출력
-		g_pLog->Log("FPS:%d", nFPS );
+		g_pLog->Log( "FPS:%d", nFPS );
 
 		/// 카메라의 위치값 출력
 		D3DXVECTOR3*	pv;
 		pv = g_pCamera->GetEye();
-		g_pLog->Log("EYE:[%f,%f,%f]",pv->x, pv->y, pv->z );
+		g_pLog->Log( "EYE:[%f,%f,%f]", pv->x, pv->y, pv->z );
 		nFPS = 0;
 		return;
 	}
+
 	nFPS++;
 }
 
@@ -356,12 +370,26 @@ void ProcessMouse( void )
  */
 void ProcessKey( void )
 {
-	if( GetAsyncKeyState( 'A' ) ) g_pCamera->MoveLocalZ( 0.5f );	// 카메라 전진!
-	if( GetAsyncKeyState( 'Z' ) ) g_pCamera->MoveLocalZ( -0.5f );	// 카메라 후진!
-	if( GetAsyncKeyState( VK_ESCAPE ) ) PostMessage( g_hwnd, WM_DESTROY, 0, 0L );
-	if( GetAsyncKeyState( VK_LBUTTON ) ) g_pd3dDevice->SetRenderState( D3DRS_FILLMODE, D3DFILL_WIREFRAME );
-	if( GetAsyncKeyState( VK_RBUTTON ) ) g_pd3dDevice->SetRenderState( D3DRS_FILLMODE, D3DFILL_SOLID );
-
+	if ( GetAsyncKeyState( 'A' ) )
+	{
+		g_pCamera->MoveLocalZ( 0.5f );	// 카메라 전진!
+	}
+	if ( GetAsyncKeyState( 'Z' ) )
+	{
+		g_pCamera->MoveLocalZ( -0.5f );	// 카메라 후진!
+	}
+	if ( GetAsyncKeyState( VK_ESCAPE ) )
+	{
+		PostMessage( g_hwnd, WM_DESTROY, 0, 0L );
+	}
+	if ( GetAsyncKeyState( VK_LBUTTON ) )
+	{
+		g_pd3dDevice->SetRenderState( D3DRS_FILLMODE, D3DFILL_WIREFRAME );
+	}
+	if ( GetAsyncKeyState( VK_RBUTTON ) )
+	{
+		g_pd3dDevice->SetRenderState( D3DRS_FILLMODE, D3DFILL_SOLID );
+	}
 }
 
 /**-----------------------------------------------------------------------------
@@ -399,23 +427,30 @@ VOID Animate()
  */
 VOID Cleanup()
 {
-    if( g_pTexHeight != NULL )        
-        g_pTexHeight->Release();
-
-    if( g_pTexDiffuse!= NULL )        
-        g_pTexDiffuse->Release();
-
-    if( g_pIB != NULL )        
-        g_pIB->Release();
-
-    if( g_pVB != NULL )        
-        g_pVB->Release();
-
-    if( g_pd3dDevice != NULL ) 
-        g_pd3dDevice->Release();
-
-    if( g_pD3D != NULL )       
-        g_pD3D->Release();
+	if ( g_pTexHeight != NULL )
+	{
+		g_pTexHeight->Release();
+	}
+	if ( g_pTexDiffuse != NULL )
+	{
+		g_pTexDiffuse->Release();
+	}
+	if ( g_pIB != NULL )
+	{
+		g_pIB->Release();
+	}
+	if ( g_pVB != NULL )
+	{
+		g_pVB->Release();
+	}
+	if ( g_pd3dDevice != NULL )
+	{
+		g_pd3dDevice->Release();
+	}
+	if ( g_pD3D != NULL )
+	{
+		g_pD3D->Release();
+	}
 }
 
 
@@ -514,7 +549,8 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT )
 	g_hwnd = hWnd;
 
 	g_pLog = new ZFLog( ZF_LOG_TARGET_CONSOLE | ZF_LOG_TARGET_WINDOW );
-	g_pCamera = new ZCamera;
+	// g_pCamera = new ZCamera;
+	g_pCamera = (ZCamera*)_aligned_malloc( sizeof( ZCamera ), 16 );
 
     /// Direct3D 초기화
     if( SUCCEEDED( InitD3D( hWnd ) ) )
@@ -538,14 +574,22 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT )
 					DispatchMessage( &msg );
 				}
 				else
-				/// 처리할 메시지가 없으면 Render()함수 호출
+				{
+					/// 처리할 메시지가 없으면 Render()함수 호출
 					Render();
+				}
 			}
 		}
     }
 
 	delete g_pLog;
-	delete g_pCamera;
+	// delete g_pCamera;
+	if ( g_pCamera )
+	{
+		g_pCamera->~ZCamera();
+		_aligned_free( g_pCamera );
+	}
+
 	/// 등록된 클래스 소거
     UnregisterClass( "D3D Tutorial", wc.hInstance );
     return 0;

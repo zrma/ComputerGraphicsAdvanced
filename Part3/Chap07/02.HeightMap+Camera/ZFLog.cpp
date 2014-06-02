@@ -1,4 +1,4 @@
-#include "ZFLog.h"
+Ôªø#include "ZFLog.h"
 #include <time.h>
 
 
@@ -6,16 +6,22 @@ ZFLog::ZFLog( UINT32 nTarget, LPSTR szFilename )
 {
 	m_nTarget = nTarget;
 
-	if( nTarget & ZF_LOG_TARGET_FILE )
+	if ( nTarget & ZF_LOG_TARGET_FILE )
+	{
 		lstrcpy( m_szFilename, szFilename );
+	}
 	else
+	{
 		m_szFilename[0] = NULL;
-
-	if( nTarget & ZF_LOG_TARGET_WINDOW )
+	}
+	if ( nTarget & ZF_LOG_TARGET_WINDOW )
+	{
 		CreateLogWindow();
+	}
 	else
+	{
 		m_hwnd = NULL;
-
+	}
 	Log( "F-Killer Logging Started..." );
 }
 
@@ -61,29 +67,29 @@ int ZFLog::Log( LPSTR fmt, ... )
 	char	date[128];
 	char	time[128];
 
-	_strdate( date );
-	_strtime( time );
-	vsprintf( buff, fmt, (char *)(&fmt+1) );
+	_strdate_s( date );
+	_strtime_s( time );
+	vsprintf_s( buff, fmt, (char *)(&fmt+1) );
 
-	// Consoleø° √‚∑¬«“ ∞ÊøÏ 
+	// ConsoleÏóê Ï∂úÎ†•Ìï† Í≤ΩÏö∞ 
 	if( m_nTarget & ZF_LOG_TARGET_CONSOLE )
 	{
 		printf( "(date[%s] time[%s]) : %s\n", date, time, buff );
 	}
 
-	// Log Fileø° √‚∑¬«“ ∞ÊøÏ
+	// Log FileÏóê Ï∂úÎ†•Ìï† Í≤ΩÏö∞
 	if( m_nTarget & ZF_LOG_TARGET_FILE )
 	{
 		FILE*	fp = NULL;
-		fp = fopen( m_szFilename, "a+" );
+		fopen_s( &fp, m_szFilename, "a+" );
 		if( fp )
 		{
-			fprintf( fp, "(date[%s] time[%s]) : %s\n", date, time, buff );
+			fprintf_s( fp, "(date[%s] time[%s]) : %s\n", date, time, buff );
 			fclose( fp );
 		}
 	}
 
-	// Log Windowø° √‚∑¬«“ ∞ÊøÏ 
+	// Log WindowÏóê Ï∂úÎ†•Ìï† Í≤ΩÏö∞ 
 	if( m_nTarget & ZF_LOG_TARGET_WINDOW )
 	{
 		SendMessage( m_hwndList, LB_ADDSTRING, 0, (LPARAM) buff );

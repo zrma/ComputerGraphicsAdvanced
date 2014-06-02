@@ -1,4 +1,4 @@
-#ifndef _ZFLOG_H_
+﻿#ifndef _ZFLOG_H_
 #define _ZFLOG_H_
 
 #include <windows.h>
