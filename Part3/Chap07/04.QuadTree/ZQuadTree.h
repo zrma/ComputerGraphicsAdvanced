@@ -1,22 +1,22 @@
-#ifndef _ZQUADTREE_H_
+ï»¿#ifndef _ZQUADTREE_H_
 #define _ZQUADTREE_H_
 
 #include "define.h"
 
 /**
- * @brief QuadTreeÀÇ º£ÀÌ½º Å¬·¡½º
+ * @brief QuadTreeì˜ ë² ì´ìŠ¤ í´ë˜ìŠ¤
  *
  */ 
 class ZQuadTree
 {
-	/// ÄõµåÆ®¸®¿¡ º¸°üµÇ´Â 4°³ÀÇ ÄÚ³Ê°ª¿¡ ´ëÇÑ »ó¼ö°ª
+	/// ì¿¼ë“œíŠ¸ë¦¬ì— ë³´ê´€ë˜ëŠ” 4ê°œì˜ ì½”ë„ˆê°’ì— ëŒ€í•œ ìƒìˆ˜ê°’
 	enum		CornerType { CORNER_TL, CORNER_TR, CORNER_BL, CORNER_BR };
 
 private:
-	ZQuadTree*	m_pChild[4];		/// QuadTreeÀÇ 4°³ÀÇ ÀÚ½Ä³ëµå
+	ZQuadTree*	m_pChild[4];		/// QuadTreeì˜ 4ê°œì˜ ìì‹ë…¸ë“œ
 
-	int			m_nCenter;			/// QuadTree¿¡ º¸°üÇÒ Ã¹¹øÂ° °ª
-	int			m_nCorner[4];		/// QuadTree¿¡ º¸°üÇÒ µÎ¹øÂ° °ª
+	int			m_nCenter;			/// QuadTreeì— ë³´ê´€í•  ì²«ë²ˆì§¸ ê°’
+	int			m_nCorner[4];		/// QuadTreeì— ë³´ê´€í•  ë‘ë²ˆì§¸ ê°’
 									///    TopLeft(TL)      TopRight(TR)
 									///              0------1
 									///              |      |
@@ -24,38 +24,38 @@ private:
 									///              2------3
 									/// BottomLeft(BL)      BottomRight(BR)
 private:
-	/// ÀÚ½Ä ³ëµå¸¦ Ãß°¡ÇÑ´Ù.
+	/// ìì‹ ë…¸ë“œë¥¼ ì¶”ê°€í•œë‹¤.
 	ZQuadTree*	_AddChild( int nCornerTL, int nCornerTR, int nCornerBL, int nCornerBR );
 	
-	/// 4°³ÀÇ ÄÚ³Ê°ªÀ» ¼ÂÆÃÇÑ´Ù.
+	/// 4ê°œì˜ ì½”ë„ˆê°’ì„ ì…‹íŒ…í•œë‹¤.
 	BOOL		_SetCorners( int nCornerTL, int nCornerTR, int nCornerBL, int nCornerBR );
 	
-	/// Quadtree¸¦ 4°³ÀÇ ÇÏÀ§ Æ®¸®·Î ºÎºĞºĞÇÒ(subdivide)ÇÑ´Ù.
+	/// Quadtreeë¥¼ 4ê°œì˜ í•˜ìœ„ íŠ¸ë¦¬ë¡œ ë¶€ë¶„ë¶„í• (subdivide)í•œë‹¤.
 	BOOL		_SubDivide();
 	
-	/// ÇöÀç ³ëµå°¡ Ãâ·ÂÀÌ °¡´ÉÇÑ ³ëµåÀÎ°¡?
+	/// í˜„ì¬ ë…¸ë“œê°€ ì¶œë ¥ì´ ê°€ëŠ¥í•œ ë…¸ë“œì¸ê°€?
 	BOOL		_IsVisible() { return ( m_nCorner[CORNER_TR] - m_nCorner[CORNER_TL] <= 1 ); }
 	
-	/// Ãâ·ÂÇÒ Æú¸®°ïÀÇ ÀÎµ¦½º¸¦ »ı¼ºÇÑ´Ù.
+	/// ì¶œë ¥í•  í´ë¦¬ê³¤ì˜ ì¸ë±ìŠ¤ë¥¼ ìƒì„±í•œë‹¤.
 	int			_GenTriIndex( int nTriangles, LPVOID pIndex );
 	
-	/// ¸Ş¸ğ¸®¿¡¼­ ÄõµåÆ®¸®¸¦ »èÁ¦ÇÑ´Ù.
+	/// ë©”ëª¨ë¦¬ì—ì„œ ì¿¼ë“œíŠ¸ë¦¬ë¥¼ ì‚­ì œí•œë‹¤.
 	void		_Destroy();
 public:
 				
-				/// ÃÖÃÊ ·çÆ®³ëµå »ı¼ºÀÚ
+				/// ìµœì´ˆ ë£¨íŠ¸ë…¸ë“œ ìƒì„±ì
 				ZQuadTree( int cx, int cy );
 				
-				/// ÇÏÀ§ ÀÚ½Ä³ëµå »ı¼ºÀÚ
+				/// í•˜ìœ„ ìì‹ë…¸ë“œ ìƒì„±ì
 				ZQuadTree( ZQuadTree* pParent );
 				
-				/// ¼Ò¸êÀÚ
+				/// ì†Œë©¸ì
 				~ZQuadTree();
 				
-	/// QuadTree¸¦ ±¸ÃàÇÑ´Ù.
+	/// QuadTreeë¥¼ êµ¬ì¶•í•œë‹¤.
 	BOOL		Build();
 
-	///	»ï°¢ÇüÀÇ ÀÎµ¦½º¸¦ ¸¸µé°í, Ãâ·ÂÇÒ »ï°¢ÇüÀÇ °³¼ö¸¦ ¹İÈ¯ÇÑ´Ù.
+	///	ì‚¼ê°í˜•ì˜ ì¸ë±ìŠ¤ë¥¼ ë§Œë“¤ê³ , ì¶œë ¥í•  ì‚¼ê°í˜•ì˜ ê°œìˆ˜ë¥¼ ë°˜í™˜í•œë‹¤.
 	int			GenerateIndex( LPVOID pIB );
 };
 

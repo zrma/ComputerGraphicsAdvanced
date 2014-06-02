@@ -1,4 +1,4 @@
-#include "ZFrustum.h"
+ï»¿#include "ZFrustum.h"
 #include "ZFLog.h"
 
 ZFrustum::ZFrustum()
@@ -7,14 +7,14 @@ ZFrustum::ZFrustum()
 	ZeroMemory( m_plane, sizeof( m_plane[0] ) * 6 );
 }
 
-// Ä«¸Ş¶ó(view) * ÇÁ·ÎÁ§¼Ç(projection)Çà·ÄÀ» ÀÔ·Â¹Ş¾Æ 6°³ÀÇ Æò¸éÀ» ¸¸µç´Ù.
+// ì¹´ë©”ë¼(view) * í”„ë¡œì ì…˜(projection)í–‰ë ¬ì„ ì…ë ¥ë°›ì•„ 6ê°œì˜ í‰ë©´ì„ ë§Œë“ ë‹¤.
 BOOL ZFrustum::Make( D3DXMATRIXA16* pmatViewProj )
 {
 	int				i;
 	D3DXMATRIXA16	matInv;
 
-	// Åõ¿µÇà·Ä±îÁö °ÅÄ¡¸é ¸ğµç 3Â÷¿ø ¿ùµåÁÂÇ¥ÀÇ Á¡Àº (-1,-1,0) ~ (1,1,1)»çÀÌÀÇ °ªÀ¸·Î ¹Ù²ï´Ù.
-	// m_vtx¿¡ ÀÌ µ¿Â÷°ø°£ÀÇ °æ°è°ªÀ» ³Ö¾îµĞ´Ù.
+	// íˆ¬ì˜í–‰ë ¬ê¹Œì§€ ê±°ì¹˜ë©´ ëª¨ë“  3ì°¨ì› ì›”ë“œì¢Œí‘œì˜ ì ì€ (-1,-1,0) ~ (1,1,1)ì‚¬ì´ì˜ ê°’ìœ¼ë¡œ ë°”ë€ë‹¤.
+	// m_vtxì— ì´ ë™ì°¨ê³µê°„ì˜ ê²½ê³„ê°’ì„ ë„£ì–´ë‘”ë‹¤.
 	m_vtx[0].x = -1.0f;	m_vtx[0].y = -1.0f;	m_vtx[0].z = 0.0f;
 	m_vtx[1].x =  1.0f;	m_vtx[1].y = -1.0f;	m_vtx[1].z = 0.0f;
 	m_vtx[2].x =  1.0f;	m_vtx[2].y = -1.0f;	m_vtx[2].z = 1.0f;
@@ -24,73 +24,91 @@ BOOL ZFrustum::Make( D3DXMATRIXA16* pmatViewProj )
 	m_vtx[6].x =  1.0f;	m_vtx[6].y =  1.0f;	m_vtx[6].z = 1.0f;
 	m_vtx[7].x = -1.0f;	m_vtx[7].y =  1.0f;	m_vtx[7].z = 1.0f;
 
-	// view * projÀÇ ¿ªÇà·ÄÀ» ±¸ÇÑ´Ù.
+	// view * projì˜ ì—­í–‰ë ¬ì„ êµ¬í•œë‹¤.
 	D3DXMatrixInverse(&matInv, NULL, pmatViewProj );
 
-	// Vertex_ÃÖÁ¾ = Vertex_local * Matrix_world * Matrix_view * Matrix_Proj ÀÎµ¥,
-	// Vertex_world = Vertex_local * Matrix_worldÀÌ¹Ç·Î,
-	// Vertex_ÃÖÁ¾ = Vertex_world * Matrix_view * Matrix_Proj ÀÌ´Ù.
-	// Vertex_ÃÖÁ¾ = Vertex_world * ( Matrix_view * Matrix_Proj ) ¿¡¼­
-	// ¿ªÇà·Ä( Matrix_view * Matrix_Proj )^-1¸¦ ¾çº¯¿¡ °öÇÏ¸é
-	// Vertex_ÃÖÁ¾ * ¿ªÇà·Ä( Matrix_view * Matrix_Proj )^-1 = Vertex_World °¡ µÈ´Ù.
-	// ±×·¯¹Ç·Î, m_vtx * matInv = Vertex_world°¡ µÇ¾î, ¿ùµåÁÂÇ¥°èÀÇ ÇÁ·¯½ºÅÒ ÁÂÇ¥¸¦ ¾òÀ» ¼ö ÀÖ´Ù.
+	// Vertex_ìµœì¢… = Vertex_local * Matrix_world * Matrix_view * Matrix_Proj ì¸ë°,
+	// Vertex_world = Vertex_local * Matrix_worldì´ë¯€ë¡œ,
+	// Vertex_ìµœì¢… = Vertex_world * Matrix_view * Matrix_Proj ì´ë‹¤.
+	// Vertex_ìµœì¢… = Vertex_world * ( Matrix_view * Matrix_Proj ) ì—ì„œ
+	// ì—­í–‰ë ¬( Matrix_view * Matrix_Proj )^-1ë¥¼ ì–‘ë³€ì— ê³±í•˜ë©´
+	// Vertex_ìµœì¢… * ì—­í–‰ë ¬( Matrix_view * Matrix_Proj )^-1 = Vertex_World ê°€ ëœë‹¤.
+	// ê·¸ëŸ¬ë¯€ë¡œ, m_vtx * matInv = Vertex_worldê°€ ë˜ì–´, ì›”ë“œì¢Œí‘œê³„ì˜ í”„ëŸ¬ìŠ¤í…€ ì¢Œí‘œë¥¼ ì–»ì„ ìˆ˜ ìˆë‹¤.
 	for( i = 0; i < 8; i++ )
 		D3DXVec3TransformCoord( &m_vtx[i], &m_vtx[i], &matInv );
 
-	// 0¹ø°ú 5¹øÀº ÇÁ·¯½ºÅÒÁß nearÆò¸éÀÇ ÁÂÃø»ó´Ü°ú ¿ìÃøÇÏ´ÜÀÌ¹Ç·Î, µÑÀÇ ÁÂÇ¥¸¦ ´õÇØ¼­ 2·Î ³ª´©¸é
-	// Ä«¸Ş¶óÀÇ ÁÂÇ¥¸¦ ¾òÀ» ¼ö ÀÖ´Ù.(Á¤È®È÷ ÀÏÄ¡ÇÏ´Â °ÍÀº ¾Æ´Ï´Ù.)
+	// 0ë²ˆê³¼ 5ë²ˆì€ í”„ëŸ¬ìŠ¤í…€ì¤‘ nearí‰ë©´ì˜ ì¢Œì¸¡ìƒë‹¨ê³¼ ìš°ì¸¡í•˜ë‹¨ì´ë¯€ë¡œ, ë‘˜ì˜ ì¢Œí‘œë¥¼ ë”í•´ì„œ 2ë¡œ ë‚˜ëˆ„ë©´
+	// ì¹´ë©”ë¼ì˜ ì¢Œí‘œë¥¼ ì–»ì„ ìˆ˜ ìˆë‹¤.(ì •í™•íˆ ì¼ì¹˜í•˜ëŠ” ê²ƒì€ ì•„ë‹ˆë‹¤.)
 	m_vPos = ( m_vtx[0] + m_vtx[5] ) / 2.0f;
 	
-	// ¾ò¾îÁø ¿ùµåÁÂÇ¥·Î ÇÁ·¯½ºÅÒ Æò¸éÀ» ¸¸µç´Ù
-	// º¤ÅÍ°¡ ÇÁ·¯½ºÅÒ ¾ÈÂÊ¿¡¼­ ¹Ù±ùÂÊÀ¸·Î ³ª°¡´Â Æò¸éµéÀÌ´Ù.
-//	D3DXPlaneFromPoints(&m_plane[0], m_vtx+4, m_vtx+7, m_vtx+6);	// »ó Æò¸é(top)
-//	D3DXPlaneFromPoints(&m_plane[1], m_vtx  , m_vtx+1, m_vtx+2);	// ÇÏ Æò¸é(bottom)
-//	D3DXPlaneFromPoints(&m_plane[2], m_vtx  , m_vtx+4, m_vtx+5);	// ±Ù Æò¸é(near)
-	D3DXPlaneFromPoints(&m_plane[3], m_vtx+2, m_vtx+6, m_vtx+7);	// ¿ø Æò¸é(far)
-	D3DXPlaneFromPoints(&m_plane[4], m_vtx  , m_vtx+3, m_vtx+7);	// ÁÂ Æò¸é(left)
-	D3DXPlaneFromPoints(&m_plane[5], m_vtx+1, m_vtx+5, m_vtx+6);	// ¿ì Æò¸é(right)
+	// ì–»ì–´ì§„ ì›”ë“œì¢Œí‘œë¡œ í”„ëŸ¬ìŠ¤í…€ í‰ë©´ì„ ë§Œë“ ë‹¤
+	// ë²¡í„°ê°€ í”„ëŸ¬ìŠ¤í…€ ì•ˆìª½ì—ì„œ ë°”ê¹¥ìª½ìœ¼ë¡œ ë‚˜ê°€ëŠ” í‰ë©´ë“¤ì´ë‹¤.
+//	D3DXPlaneFromPoints(&m_plane[0], m_vtx+4, m_vtx+7, m_vtx+6);	// ìƒ í‰ë©´(top)
+//	D3DXPlaneFromPoints(&m_plane[1], m_vtx  , m_vtx+1, m_vtx+2);	// í•˜ í‰ë©´(bottom)
+//	D3DXPlaneFromPoints(&m_plane[2], m_vtx  , m_vtx+4, m_vtx+5);	// ê·¼ í‰ë©´(near)
+	D3DXPlaneFromPoints(&m_plane[3], m_vtx+2, m_vtx+6, m_vtx+7);	// ì› í‰ë©´(far)
+	D3DXPlaneFromPoints(&m_plane[4], m_vtx  , m_vtx+3, m_vtx+7);	// ì¢Œ í‰ë©´(left)
+	D3DXPlaneFromPoints(&m_plane[5], m_vtx+1, m_vtx+5, m_vtx+6);	// ìš° í‰ë©´(right)
 
 	return TRUE;
 }
 
-/// ÇÑÁ¡ v°¡ ÇÁ·¯½ºÅÒ¾È¿¡ ÀÖÀ¸¸é TRUE¸¦ ¹İÈ¯, ¾Æ´Ï¸é FALSE¸¦ ¹İÈ¯ÇÑ´Ù.
+/// í•œì  vê°€ í”„ëŸ¬ìŠ¤í…€ì•ˆì— ìˆìœ¼ë©´ TRUEë¥¼ ë°˜í™˜, ì•„ë‹ˆë©´ FALSEë¥¼ ë°˜í™˜í•œë‹¤.
 BOOL ZFrustum::IsIn( D3DXVECTOR3* pv )
 {
 	float		fDist;
 //	int			i;
 
-	// ÇöÀç´Â left, right, far plane¸¸ Àû¿ëÇÑ´Ù.
+	// í˜„ì¬ëŠ” left, right, far planeë§Œ ì ìš©í•œë‹¤.
 //	for( i = 0 ; i < 6 ; i++ )
 	{
 		fDist = D3DXPlaneDotCoord( &m_plane[3], pv );
-		if( fDist > PLANE_EPSILON ) return FALSE;	// planeÀÇ normalº¤ÅÍ°¡ far·Î ÇâÇÏ°í ÀÖÀ¸¹Ç·Î ¾ç¼öÀÌ¸é ÇÁ·¯½ºÅÒÀÇ ¹Ù±ùÂÊ
+		if ( fDist > PLANE_EPSILON )
+		{
+			return FALSE;	// planeì˜ normalë²¡í„°ê°€ farë¡œ í–¥í•˜ê³  ìˆìœ¼ë¯€ë¡œ ì–‘ìˆ˜ì´ë©´ í”„ëŸ¬ìŠ¤í…€ì˜ ë°”ê¹¥ìª½
+		}
 		fDist = D3DXPlaneDotCoord( &m_plane[4], pv );
-		if( fDist > PLANE_EPSILON ) return FALSE;	// planeÀÇ normalº¤ÅÍ°¡ left·Î ÇâÇÏ°í ÀÖÀ¸¹Ç·Î ¾ç¼öÀÌ¸é ÇÁ·¯½ºÅÒÀÇ ¿ŞÂÊ
+		if ( fDist > PLANE_EPSILON )
+		{
+			return FALSE;	// planeì˜ normalë²¡í„°ê°€ leftë¡œ í–¥í•˜ê³  ìˆìœ¼ë¯€ë¡œ ì–‘ìˆ˜ì´ë©´ í”„ëŸ¬ìŠ¤í…€ì˜ ì™¼ìª½
+		}
 		fDist = D3DXPlaneDotCoord( &m_plane[5], pv );
-		if( fDist > PLANE_EPSILON ) return FALSE;	// planeÀÇ normalº¤ÅÍ°¡ right·Î ÇâÇÏ°í ÀÖÀ¸¹Ç·Î ¾ç¼öÀÌ¸é ÇÁ·¯½ºÅÒÀÇ ¿À¸¥ÂÊ
+		if ( fDist > PLANE_EPSILON )
+		{
+			return FALSE;	// planeì˜ normalë²¡í„°ê°€ rightë¡œ í–¥í•˜ê³  ìˆìœ¼ë¯€ë¡œ ì–‘ìˆ˜ì´ë©´ í”„ëŸ¬ìŠ¤í…€ì˜ ì˜¤ë¥¸ìª½
+		}
 	}
 
 	return TRUE;
 }
 
-/** Áß½É(v)¿Í ¹İÁö¸§(radius)¸¦ °®´Â °æ°è±¸(bounding sphere)°¡ ÇÁ·¯½ºÅÒ¾È¿¡ ÀÖÀ¸¸é
- *  TRUE¸¦ ¹İÈ¯, ¾Æ´Ï¸é FALSE¸¦ ¹İÈ¯ÇÑ´Ù.
+/** ì¤‘ì‹¬(v)ì™€ ë°˜ì§€ë¦„(radius)ë¥¼ ê°–ëŠ” ê²½ê³„êµ¬(bounding sphere)ê°€ í”„ëŸ¬ìŠ¤í…€ì•ˆì— ìˆìœ¼ë©´
+ *  TRUEë¥¼ ë°˜í™˜, ì•„ë‹ˆë©´ FALSEë¥¼ ë°˜í™˜í•œë‹¤.
  */
 BOOL ZFrustum::IsInSphere( D3DXVECTOR3* pv, float radius )
 {
 	float		fDist;
 
 	fDist = D3DXPlaneDotCoord( &m_plane[3], pv );
-	if( fDist > (radius+PLANE_EPSILON) ) return FALSE;	// Æò¸é°ú Áß½ÉÁ¡ÀÇ °Å¸®°¡ ¹İÁö¸§º¸´Ù Å©¸é ÇÁ·¯½ºÅÒ¿¡ ¾øÀ½
+	if ( fDist > ( radius + PLANE_EPSILON ) )
+	{
+		return FALSE;	// í‰ë©´ê³¼ ì¤‘ì‹¬ì ì˜ ê±°ë¦¬ê°€ ë°˜ì§€ë¦„ë³´ë‹¤ í¬ë©´ í”„ëŸ¬ìŠ¤í…€ì— ì—†ìŒ
+	}
 	fDist = D3DXPlaneDotCoord( &m_plane[4], pv );
-	if( fDist > (radius+PLANE_EPSILON) ) return FALSE;	// Æò¸é°ú Áß½ÉÁ¡ÀÇ °Å¸®°¡ ¹İÁö¸§º¸´Ù Å©¸é ÇÁ·¯½ºÅÒ¿¡ ¾øÀ½
+	if ( fDist > ( radius + PLANE_EPSILON ) )
+	{
+		return FALSE;	// í‰ë©´ê³¼ ì¤‘ì‹¬ì ì˜ ê±°ë¦¬ê°€ ë°˜ì§€ë¦„ë³´ë‹¤ í¬ë©´ í”„ëŸ¬ìŠ¤í…€ì— ì—†ìŒ
+	}
 	fDist = D3DXPlaneDotCoord( &m_plane[5], pv );
-	if( fDist > (radius+PLANE_EPSILON) ) return FALSE;	// Æò¸é°ú Áß½ÉÁ¡ÀÇ °Å¸®°¡ ¹İÁö¸§º¸´Ù Å©¸é ÇÁ·¯½ºÅÒ¿¡ ¾øÀ½
+	if ( fDist > ( radius + PLANE_EPSILON ) )
+	{
+		return FALSE;	// í‰ë©´ê³¼ ì¤‘ì‹¬ì ì˜ ê±°ë¦¬ê°€ ë°˜ì§€ë¦„ë³´ë‹¤ í¬ë©´ í”„ëŸ¬ìŠ¤í…€ì— ì—†ìŒ
+	}
 
 	return TRUE;
 }
 
-/// ÇÁ·¯½ºÅÒÀ» È­¸é¿¡ ±×·ÁÁØ´Ù.
+/// í”„ëŸ¬ìŠ¤í…€ì„ í™”ë©´ì— ê·¸ë ¤ì¤€ë‹¤.
 BOOL ZFrustum::Draw( LPDIRECT3DDEVICE9 pDev )
 {
 	WORD		index[] = { 0, 1, 2,
@@ -129,20 +147,20 @@ BOOL ZFrustum::Draw( LPDIRECT3DDEVICE9 pDev )
 	pDev->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_ONE );
 	pDev->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_ONE );
 
-	// ÆÄ¶õ»öÀ¸·Î »ó,ÇÏ Æò¸éÀ» ±×¸°´Ù.
+	// íŒŒë€ìƒ‰ìœ¼ë¡œ ìƒ,í•˜ í‰ë©´ì„ ê·¸ë¦°ë‹¤.
     pDev->SetRenderState( D3DRS_LIGHTING, TRUE );
     ZeroMemory( &mtrl, sizeof(D3DMATERIAL9) );
     mtrl.Diffuse.b = mtrl.Ambient.b = 1.0f;
     pDev->SetMaterial( &mtrl );
 	pDev->DrawIndexedPrimitiveUP( D3DPT_TRIANGLELIST, 0, 8, 4, index, D3DFMT_INDEX16, vtx, sizeof( vtx[0] ) );
 
-	// ³ì»öÀ¸·Î ÁÂ,¿ì Æò¸éÀ» ±×¸°´Ù.
+	// ë…¹ìƒ‰ìœ¼ë¡œ ì¢Œ,ìš° í‰ë©´ì„ ê·¸ë¦°ë‹¤.
     ZeroMemory( &mtrl, sizeof(D3DMATERIAL9) );
     mtrl.Diffuse.g = mtrl.Ambient.g = 1.0f;
     pDev->SetMaterial( &mtrl );
 	pDev->DrawIndexedPrimitiveUP( D3DPT_TRIANGLELIST, 0, 8, 4, index+4*3, D3DFMT_INDEX16, vtx, sizeof( vtx[0] ) );
 
-	// ºÓÀº»öÀ¸·Î ¿ø,±Ù Æò¸éÀ» ±×¸°´Ù.
+	// ë¶‰ì€ìƒ‰ìœ¼ë¡œ ì›,ê·¼ í‰ë©´ì„ ê·¸ë¦°ë‹¤.
     ZeroMemory( &mtrl, sizeof(D3DMATERIAL9) );
     mtrl.Diffuse.r = mtrl.Ambient.r = 1.0f;
     pDev->SetMaterial( &mtrl );
@@ -156,7 +174,7 @@ BOOL ZFrustum::Draw( LPDIRECT3DDEVICE9 pDev )
 void ZMakePlane( D3DXPLANE* pPlane, D3DXVECTOR3* pv0, D3DXVECTOR3* pv1, D3DXVECTOR3* pv2 )
 {
 	D3DXPlaneFromPoints( pPlane, pv0, pv1, pv2 );
-//  Æò¸éÀÇ ¹æÁ¤½ÄÀ» Á÷Á¢ À¯µµÇÏ´Â ¼Ò½º
+//  í‰ë©´ì˜ ë°©ì •ì‹ì„ ì§ì ‘ ìœ ë„í•˜ëŠ” ì†ŒìŠ¤
 //	for OpenGL
 //	D3DXVECTOR3	v0, v1, v2;
 //	v1 = *pv1 - *pv0;

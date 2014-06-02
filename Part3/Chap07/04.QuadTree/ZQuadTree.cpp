@@ -1,6 +1,6 @@
-#include "ZQuadTree.h"
+ï»¿#include "ZQuadTree.h"
 
-/// ÃÖÃÊ ·çÆ®³ëµå »ı¼ºÀÚ
+/// ìµœì´ˆ ë£¨íŠ¸ë…¸ë“œ ìƒì„±ì
 ZQuadTree::ZQuadTree( int cx, int cy )
 {
 	int		i;
@@ -17,7 +17,7 @@ ZQuadTree::ZQuadTree( int cx, int cy )
 								m_nCorner[CORNER_BL] + m_nCorner[CORNER_BR] ) / 4;
 }
 
-/// ÇÏÀ§ ÀÚ½Ä³ëµå »ı¼ºÀÚ
+/// í•˜ìœ„ ìì‹ë…¸ë“œ ìƒì„±ì
 ZQuadTree::ZQuadTree( ZQuadTree* pParent )
 {
 	int		i;
@@ -29,20 +29,23 @@ ZQuadTree::ZQuadTree( ZQuadTree* pParent )
 	}
 }
 
-/// ¼Ò¸êÀÚ
+/// ì†Œë©¸ì
 ZQuadTree::~ZQuadTree()
 {
 	_Destroy();
 }
 
-/// ¸Ş¸ğ¸®¿¡¼­ ÄõµåÆ®¸®¸¦ »èÁ¦ÇÑ´Ù.
+/// ë©”ëª¨ë¦¬ì—ì„œ ì¿¼ë“œíŠ¸ë¦¬ë¥¼ ì‚­ì œí•œë‹¤.
 void	ZQuadTree::_Destroy()
 {
-	for( int i = 0 ; i < 4 ; i++ ) DEL( m_pChild[i] );
+	for ( int i = 0; i < 4; i++ )
+	{
+		DEL( m_pChild[i] );
+	}
 }
 
 
-/// 4°³ÀÇ ÄÚ³Ê°ªÀ» ¼ÂÆÃÇÑ´Ù.
+/// 4ê°œì˜ ì½”ë„ˆê°’ì„ ì…‹íŒ…í•œë‹¤.
 BOOL	ZQuadTree::_SetCorners( int nCornerTL, int nCornerTR, int nCornerBL, int nCornerBR )
 {
 	m_nCorner[CORNER_TL] = nCornerTL;
@@ -55,7 +58,7 @@ BOOL	ZQuadTree::_SetCorners( int nCornerTL, int nCornerTR, int nCornerBL, int nC
 }
 
 
-/// ÀÚ½Ä ³ëµå¸¦ Ãß°¡ÇÑ´Ù.
+/// ìì‹ ë…¸ë“œë¥¼ ì¶”ê°€í•œë‹¤.
 ZQuadTree*	ZQuadTree::_AddChild( int nCornerTL, int nCornerTR, int nCornerBL, int nCornerBR )
 {
 	ZQuadTree*	pChild;
@@ -66,7 +69,7 @@ ZQuadTree*	ZQuadTree::_AddChild( int nCornerTL, int nCornerTR, int nCornerBL, in
 	return pChild;
 }
 
-/// Quadtree¸¦ 4°³ÀÇ ÀÚ½Ä Æ®¸®·Î ºÎºĞºĞÇÒ(subdivide)ÇÑ´Ù.
+/// Quadtreeë¥¼ 4ê°œì˜ ìì‹ íŠ¸ë¦¬ë¡œ ë¶€ë¶„ë¶„í• (subdivide)í•œë‹¤.
 BOOL	ZQuadTree::_SubDivide()
 {
 	int		nTopEdgeCenter;
@@ -75,25 +78,25 @@ BOOL	ZQuadTree::_SubDivide()
 	int		nRightEdgeCenter;
 	int		nCentralPoint;
 
-	// »ó´Üº¯ °¡¿îµ¥
+	// ìƒë‹¨ë³€ ê°€ìš´ë°
 	nTopEdgeCenter		= ( m_nCorner[CORNER_TL] + m_nCorner[CORNER_TR] ) / 2;
-	// ÇÏ´Üº¯ °¡¿îµ¥ 
+	// í•˜ë‹¨ë³€ ê°€ìš´ë° 
 	nBottomEdgeCenter	= ( m_nCorner[CORNER_BL] + m_nCorner[CORNER_BR] ) / 2;
-	// ÁÂÃøº¯ °¡¿îµ¥
+	// ì¢Œì¸¡ë³€ ê°€ìš´ë°
 	nLeftEdgeCenter		= ( m_nCorner[CORNER_TL] + m_nCorner[CORNER_BL] ) / 2;
-	// ¿ìÃøº¯ °¡¿îµ¥
+	// ìš°ì¸¡ë³€ ê°€ìš´ë°
 	nRightEdgeCenter	= ( m_nCorner[CORNER_TR] + m_nCorner[CORNER_BR] ) / 2;
-	// ÇÑ°¡¿îµ¥
+	// í•œê°€ìš´ë°
 	nCentralPoint		= ( m_nCorner[CORNER_TL] + m_nCorner[CORNER_TR] + 
 							m_nCorner[CORNER_BL] + m_nCorner[CORNER_BR] ) / 4;
 
-	// ´õÀÌ»ó ºĞÇÒÀÌ ºÒ°¡´ÉÇÑ°¡? ±×·¸´Ù¸é SubDivide() Á¾·á
+	// ë”ì´ìƒ ë¶„í• ì´ ë¶ˆê°€ëŠ¥í•œê°€? ê·¸ë ‡ë‹¤ë©´ SubDivide() ì¢…ë£Œ
 	if( (m_nCorner[CORNER_TR] - m_nCorner[CORNER_TL]) <= 1 )
 	{
 		return FALSE;
 	}
 
-	// 4°³ÀÇ ÀÚ½Ä³ëµå Ãß°¡
+	// 4ê°œì˜ ìì‹ë…¸ë“œ ì¶”ê°€
 	m_pChild[CORNER_TL] = _AddChild( m_nCorner[CORNER_TL], nTopEdgeCenter, nLeftEdgeCenter, nCentralPoint );
 	m_pChild[CORNER_TR] = _AddChild( nTopEdgeCenter, m_nCorner[CORNER_TR], nCentralPoint, nRightEdgeCenter );
 	m_pChild[CORNER_BL] = _AddChild( nLeftEdgeCenter, nCentralPoint, m_nCorner[CORNER_BL], nBottomEdgeCenter );
@@ -102,7 +105,7 @@ BOOL	ZQuadTree::_SubDivide()
 	return TRUE;
 }
 
-/// Ãâ·ÂÇÒ Æú¸®°ïÀÇ ÀÎµ¦½º¸¦ »ı¼ºÇÑ´Ù.
+/// ì¶œë ¥í•  í´ë¦¬ê³¤ì˜ ì¸ë±ìŠ¤ë¥¼ ìƒì„±í•œë‹¤.
 int		ZQuadTree::_GenTriIndex( int nTris, LPVOID pIndex )
 {
 	if( _IsVisible() )
@@ -112,12 +115,12 @@ int		ZQuadTree::_GenTriIndex( int nTris, LPVOID pIndex )
 #else
 		LPDWORD p = ((LPDWORD)pIndex) + nTris * 3;
 #endif
-		// ÁÂÃø»ó´Ü »ï°¢Çü
+		// ì¢Œì¸¡ìƒë‹¨ ì‚¼ê°í˜•
 		*p++ = m_nCorner[0];
 		*p++ = m_nCorner[1];
 		*p++ = m_nCorner[2];
 		nTris++;
-		// ¿ìÃøÇÏ´Ü »ï°¢Çü
+		// ìš°ì¸¡í•˜ë‹¨ ì‚¼ê°í˜•
 		*p++ = m_nCorner[2];
 		*p++ = m_nCorner[1];
 		*p++ = m_nCorner[3];
@@ -126,16 +129,28 @@ int		ZQuadTree::_GenTriIndex( int nTris, LPVOID pIndex )
 		return nTris;
 	}
 
-	if( m_pChild[CORNER_TL] ) nTris = m_pChild[CORNER_TL]->_GenTriIndex( nTris, pIndex );
-	if( m_pChild[CORNER_TR] ) nTris = m_pChild[CORNER_TR]->_GenTriIndex( nTris, pIndex );
-	if( m_pChild[CORNER_BL] ) nTris = m_pChild[CORNER_BL]->_GenTriIndex( nTris, pIndex );
-	if( m_pChild[CORNER_BR] ) nTris = m_pChild[CORNER_BR]->_GenTriIndex( nTris, pIndex );
+	if ( m_pChild[CORNER_TL] )
+	{
+		nTris = m_pChild[CORNER_TL]->_GenTriIndex( nTris, pIndex );
+	}
+	if ( m_pChild[CORNER_TR] )
+	{
+		nTris = m_pChild[CORNER_TR]->_GenTriIndex( nTris, pIndex );
+	}
+	if ( m_pChild[CORNER_BL] )
+	{
+		nTris = m_pChild[CORNER_BL]->_GenTriIndex( nTris, pIndex );
+	}
+	if ( m_pChild[CORNER_BR] )
+	{
+		nTris = m_pChild[CORNER_BR]->_GenTriIndex( nTris, pIndex );
+	}
 
 	return nTris;
 }
 
 
-/// QuadTree¸¦ ±¸ÃàÇÑ´Ù.
+/// QuadTreeë¥¼ êµ¬ì¶•í•œë‹¤.
 BOOL	ZQuadTree::Build()
 {
 	if( _SubDivide() )
@@ -148,7 +163,7 @@ BOOL	ZQuadTree::Build()
 	return TRUE;
 }
 
-///	»ï°¢ÇüÀÇ ÀÎµ¦½º¸¦ ¸¸µé°í, Ãâ·ÂÇÒ »ï°¢ÇüÀÇ °³¼ö¸¦ ¹İÈ¯ÇÑ´Ù.
+///	ì‚¼ê°í˜•ì˜ ì¸ë±ìŠ¤ë¥¼ ë§Œë“¤ê³ , ì¶œë ¥í•  ì‚¼ê°í˜•ì˜ ê°œìˆ˜ë¥¼ ë°˜í™˜í•œë‹¤.
 int		ZQuadTree::GenerateIndex( LPVOID pIndex )
 {
 	return _GenTriIndex( 0, pIndex );
