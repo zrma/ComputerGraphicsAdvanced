@@ -183,9 +183,9 @@ HRESULT InitVB()
 // 			v.n.y = v.p.y;
 // 			v.n.z = v.p.z;
 
-			v.n.x = (float)( ( *( (LPDWORD)d3drc2.pBits + x + z*( d3drc2.Pitch / 4 ) ) & 0x00ff0000 ) >> 16 );
+			v.n.x = (float)( ( *( (LPDWORD)d3drc2.pBits + x + z*( d3drc2.Pitch / 4 ) ) & 0x00ff0000 ) >> 16 ) - 128;
 			v.n.y = (float)( ( *( (LPDWORD)d3drc2.pBits + x + z*( d3drc2.Pitch / 4 ) ) & 0x0000ff00 ) >> 8 );
-			v.n.z = (float)( ( *( (LPDWORD)d3drc2.pBits + x + z*( d3drc2.Pitch / 4 ) ) & 0x000000ff ) );
+			v.n.z = (float)( ( *( (LPDWORD)d3drc2.pBits + x + z*( d3drc2.Pitch / 4 ) ) & 0x000000ff ) ) - 128;
 
 			D3DXVec3Normalize( &v.n, &v.n );
 			v.t.x = (float)x / ( g_cxHeight - 1 );
@@ -290,9 +290,9 @@ VOID SetupLights()
     light.Diffuse.r  = 1.0f;							/// 광원의 색깔과 밝기
     light.Diffuse.g  = 1.0f;
     light.Diffuse.b  = 0.0f;
-    vecDir = D3DXVECTOR3( 1, 1, 1 );					/// 광원 고정
+    vecDir = D3DXVECTOR3( 1, -1, 1 );					/// 광원 고정
     vecDir = D3DXVECTOR3(cosf(GetTickCount()/350.0f),	/// 광원 회전
-                         1.0f,
+                         -1.0f,
                          sinf(GetTickCount()/350.0f) );
     D3DXVec3Normalize( (D3DXVECTOR3*)&light.Direction, &vecDir );	/// 광원의 방향을 단위벡터로 만든다.
     light.Range       = 1000.0f;									/// 광원이 다다를수 있는 최대거리
