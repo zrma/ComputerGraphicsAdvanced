@@ -64,6 +64,7 @@ HRESULT InitD3D( HWND hWnd )
     d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
     d3dpp.EnableAutoDepthStencil = TRUE;
     d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
+	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
     /// 디바이스 생성
     if( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
@@ -287,8 +288,7 @@ VOID Animate()
 	D3DXMATRIXA16	*pView;
 	pView = g_pCamera->GetViewMatrix();	// 카메라 클래스로부터 행렬정보를 얻는다.
 	m = *pView * g_matProj;				// World좌표를 얻기위해서 View * Proj행렬을 계산한다.
-	// if( !g_bLockFrustum ) g_pFrustum->Make( &m );	// View*Proj행렬로 Frustum을 만든다.
-	g_pFrustum->Make( &m );
+	if( !g_bLockFrustum ) g_pFrustum->Make( &m );	// View*Proj행렬로 Frustum을 만든다.
 
 	LogFPS();
 }

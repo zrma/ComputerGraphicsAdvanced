@@ -46,7 +46,7 @@ BOOL ZFrustum::Make( D3DXMATRIXA16* pmatViewProj )
 //	D3DXPlaneFromPoints(&m_plane[0], m_vtx+4, m_vtx+7, m_vtx+6);	// 상 평면(top)
 //	D3DXPlaneFromPoints(&m_plane[1], m_vtx  , m_vtx+1, m_vtx+2);	// 하 평면(bottom)
 //	D3DXPlaneFromPoints(&m_plane[2], m_vtx  , m_vtx+4, m_vtx+5);	// 근 평면(near)
-	D3DXPlaneFromPoints(&m_plane[3], m_vtx+2, m_vtx+6, m_vtx+7);	// 원 평면(far)
+//	D3DXPlaneFromPoints(&m_plane[3], m_vtx+2, m_vtx+6, m_vtx+7);	// 원 평면(far)
 	D3DXPlaneFromPoints(&m_plane[4], m_vtx  , m_vtx+3, m_vtx+7);	// 좌 평면(left)
 	D3DXPlaneFromPoints(&m_plane[5], m_vtx+1, m_vtx+5, m_vtx+6);	// 우 평면(right)
 
@@ -62,8 +62,8 @@ BOOL ZFrustum::IsIn( D3DXVECTOR3* pv )
 	// 현재는 left, right, far plane만 적용한다.
 //	for( i = 0 ; i < 6 ; i++ )
 	{
-		fDist = D3DXPlaneDotCoord( &m_plane[3], pv );
-		if( fDist > PLANE_EPSILON ) return FALSE;	// plane의 normal벡터가 far로 향하고 있으므로 양수이면 프러스텀의 바깥쪽
+//		fDist = D3DXPlaneDotCoord( &m_plane[3], pv );
+//		if( fDist > PLANE_EPSILON ) return FALSE;	// plane의 normal벡터가 far로 향하고 있으므로 양수이면 프러스텀의 바깥쪽
 		fDist = D3DXPlaneDotCoord( &m_plane[4], pv );
 		if( fDist > PLANE_EPSILON ) return FALSE;	// plane의 normal벡터가 left로 향하고 있으므로 양수이면 프러스텀의 왼쪽
 		fDist = D3DXPlaneDotCoord( &m_plane[5], pv );
@@ -80,8 +80,8 @@ BOOL ZFrustum::IsInSphere( D3DXVECTOR3* pv, float radius )
 {
 	float		fDist;
 
-	fDist = D3DXPlaneDotCoord( &m_plane[3], pv );
-	if( fDist > (radius+PLANE_EPSILON) ) return FALSE;	// 평면과 중심점의 거리가 반지름보다 크면 프러스텀에 없음
+//	fDist = D3DXPlaneDotCoord( &m_plane[3], pv );
+//	if( fDist > (radius+PLANE_EPSILON) ) return FALSE;	// 평면과 중심점의 거리가 반지름보다 크면 프러스텀에 없음
 	fDist = D3DXPlaneDotCoord( &m_plane[4], pv );
 	if( fDist > (radius+PLANE_EPSILON) ) return FALSE;	// 평면과 중심점의 거리가 반지름보다 크면 프러스텀에 없음
 	fDist = D3DXPlaneDotCoord( &m_plane[5], pv );
