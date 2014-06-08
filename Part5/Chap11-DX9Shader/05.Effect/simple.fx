@@ -10,6 +10,9 @@ float4x4 matP: PROJECTION;
 // 텍스처
 texture	tex0;
 
+// 테스트를 위해서 추가해 봄
+float    g_fTime;
+
 // 입력정점 형식
 struct VS_INPUT
 {
@@ -32,7 +35,12 @@ VS_OUTPUT VS( VS_INPUT In )
     VS_OUTPUT Out = (VS_OUTPUT)0;
     
     float4x4 WorldView = mul(matW, matV);	// matW와 matV행렬을 곱해서 WorldView행렬생성
-    float3 P = mul(float4(In.pos, 1), (float4x3)WorldView);  // view공간에서의 위치계산
+	
+	float4 InP = float4( In.pos, 1 ) * ( sin( g_fTime ) + 5 ) / 3;
+	float3 P = mul( float4( InP.xyz, 1 ), ( float4x3 )WorldView );  // view공간에서의 위치계산
+
+	// float3 P = mul(float4(In.pos, 1), (float4x3)WorldView);  // view공간에서의 위치계산
+	
     Out.pos  = mul(float4(P, 1), matP);	// 투영공간에서의 위치계산
 	Out.diff = In.diff;					// 입력색깔을 출력색깔로
 	Out.tex.x = In.tex.x;				// 텍스처의 x좌표는 그대로...
@@ -56,7 +64,6 @@ float4 PS(
 {
     return tex2D(Sampler, Tex) + Diff;
 }
-
 
 // MyShader 테크닉선언
 technique MyShader

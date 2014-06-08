@@ -1,4 +1,4 @@
-#ifndef _ZDEFINES_H_
+﻿#ifndef _ZDEFINES_H_
 #define _ZDEFINES_H_
 
 #pragma warning(disable:4786)	// to reduce STL warning
