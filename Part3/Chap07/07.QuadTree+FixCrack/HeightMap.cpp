@@ -139,7 +139,7 @@ HRESULT InitObjects()
 	g_pCamera = new ZCamera;
 	g_pFrustum = new ZFrustum;
 	g_pTerrain = new ZTerrain;
-	if( FAILED( g_pTerrain->Create( g_pd3dDevice, &vScale, 0.05f, BMP_HEIGHTMAP, tex ) ) )
+	if( FAILED( g_pTerrain->Create( g_pd3dDevice, &vScale, 0.001f, BMP_HEIGHTMAP, tex ) ) )
 		return E_FAIL;
 
 	return S_OK;

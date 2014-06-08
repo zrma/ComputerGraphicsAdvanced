@@ -174,9 +174,6 @@ HRESULT InitVB()
 	CUSTOMVERTEX	v;
 	CUSTOMVERTEX*	pV = (CUSTOMVERTEX*)pVertices;
 
-	D3DXVECTOR3	normalX;
-	D3DXVECTOR3 normalZ;
-
 	for( DWORD z = 0 ; z < g_czHeight ; z++ )
 	{
 		for ( DWORD x = 0; x < g_cxHeight; x++ )
