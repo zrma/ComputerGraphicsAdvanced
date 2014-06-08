@@ -1,4 +1,5 @@
-﻿/**-----------------------------------------------------------------------------
+﻿
+/**-----------------------------------------------------------------------------
  * \brief 픽셀쉐이더 예제
  * 파일: main.cpp
  *
@@ -62,6 +63,7 @@ struct MYINDEX
  */
 HRESULT InitD3D( HWND hWnd )
 {
+
     // 디바이스를 생성하기위한 D3D객체 생성
     if( NULL == ( g_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
         return E_FAIL;
@@ -109,7 +111,11 @@ HRESULT InitD3D( HWND hWnd )
 }
 
 /**-----------------------------------------------------------------------------
+<<<<<<< HEAD
+ * ?됰젹 ?ㅼ젙
+=======
  * 행렬 설정
+>>>>>>> cb393cf62d002037487db55658f3a21dde6a512c
  *------------------------------------------------------------------------------
  */
 void InitMatrix()
@@ -431,7 +437,6 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT )
 		{
 			if( SUCCEEDED( InitGeometry() ) )
 			{
-
         		/// 윈도우 출력
 				ShowWindow( hWnd, SW_SHOWDEFAULT );
 				UpdateWindow( hWnd );

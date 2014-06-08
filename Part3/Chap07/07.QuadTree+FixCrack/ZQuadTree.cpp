@@ -1,4 +1,5 @@
 ﻿#include "ZQuadTree.h"
+#include "ZFLog.h"
 
 extern LPD3DXFONT g_pFont;
 
@@ -20,7 +21,6 @@ ZQuadTree::ZQuadTree( int cx, int cy )
 	m_nCorner[CORNER_BR]	= cx * cy - 1;
 	m_nCenter				= ( m_nCorner[CORNER_TL] + m_nCorner[CORNER_TR] + 
 								m_nCorner[CORNER_BL] + m_nCorner[CORNER_BR] ) / 4;
-
 	m_bCulled = FALSE;
 	m_fRadius = 0.0f;
 }
