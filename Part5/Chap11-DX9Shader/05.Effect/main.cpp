@@ -180,8 +180,11 @@ HRESULT InitFX()
 	g_pd3dDevice->CreateVertexDeclaration( decl, &g_pDecl );
 
 	// simple.FX 파일을 읽어와서 ID3DXEffect인터페이스를 생성한다.
-	if( FAILED( D3DXCreateEffectFromFile( g_pd3dDevice, "simple.fx", NULL, NULL, 0, NULL, &g_pEffect, NULL ) ) )
+	if( FAILED( D3DXCreateEffectFromFile( g_pd3dDevice, "shader.fx", NULL, NULL, 0, NULL, &g_pEffect, NULL ) ) )
+	{
+		MessageBox( NULL, "Effect Load Failed", "shader.fx", MB_OK );
 		return E_FAIL;
+	}
 
 	return S_OK;
 }

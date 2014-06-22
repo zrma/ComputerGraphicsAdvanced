@@ -31,6 +31,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="simple.fx" />
+    <FxCompile Include="shader.fx" />
   </ItemGroup>
 </Project>

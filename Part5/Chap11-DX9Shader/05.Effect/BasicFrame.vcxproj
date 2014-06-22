@@ -147,7 +147,7 @@
     <ClInclude Include="ZFLog.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="simple.fx">
+    <FxCompile Include="shader.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
